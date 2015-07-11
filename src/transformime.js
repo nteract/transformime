@@ -22,7 +22,7 @@ export class Transformime {
         this.fallbackRenderer = new DefaultRenderer();
     }
 
-    transformMimeBundle(bundle) {
+    transformRichest(bundle) {
         this._validateMimebundle(bundle);
 
         let element;
@@ -44,8 +44,13 @@ export class Transformime {
         throw new Error('Renderer for ' + Object.keys(json).join(', ') + ' not found.');
     }
 
-    renderMimetype(data, mimetype) {
-        var renderer = this.get_renderer(mimetype);
+    transformAll(bundle) {
+        this._validateMimebundle(bundle);
+        return bundle.map(function(mimetype) { return this.transformMimetype(bundle[mimetype]); });
+    }
+
+    transformMimetype(data, mimetype) {
+        let renderer = this.get_renderer(mimetype);
         if (renderer) {
             return renderer.render(data, metadata);
         }
