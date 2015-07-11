@@ -1,0 +1,25 @@
+{
+  "name": "transformime",
+  "version": "0.0.0",
+  "description": "Transforms MIMEtypes to HTML Elements",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo 'tests are cool'"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nteract/transformime.git"
+  },
+  "keywords": [
+    "transform",
+    "mime",
+    "mimetype",
+    "jupyter"
+  ],
+  "author": "nteract",
+  "license": "BSD-3-Clause",
+  "bugs": {
+    "url": "https://github.com/nteract/transformime/issues"
+  },
+  "homepage": "https://github.com/nteract/transformime#readme"
+}
