@@ -1,3 +1,4 @@
+"use strict";
 
 /**
  * Transforms mimetypes into HTMLElements
@@ -8,7 +9,7 @@ class Transformime {
      * Public constructor
      */
     constructor() {
-    
+
         // Initialize instance variables.
         this.renderers = [
             new TextRenderer(),
@@ -19,7 +20,7 @@ class Transformime {
 
     transformMimeBundle(bundle) {
         this._validateMimebundle(bundle);
-        
+
         let element;
         let richRenderer = this.fallbackRenderer;
 
