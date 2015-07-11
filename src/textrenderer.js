@@ -1,4 +1,4 @@
-(function () { 'use strict'; }());
+"use strict";
 
 import {RendererBase} from './rendererbase';
 

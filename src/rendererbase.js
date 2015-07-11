@@ -1,4 +1,4 @@
-(function () { 'use strict'; }());
+"use strict";
 
 export class RendererBase {
     get mimetype() {

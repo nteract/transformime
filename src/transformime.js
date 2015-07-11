@@ -1,4 +1,4 @@
-(function () { 'use strict'; }());
+"use strict";
 
 import {TextRenderer} from './textrenderer';
 import {DefaultRenderer} from './defaultrenderer';
