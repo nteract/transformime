@@ -1,9 +1,13 @@
 "use strict";
 
+import {TextRenderer} from './textrenderer';
+import {DefaultRenderer} from './defaultrenderer';
+import {HTMLRenderer} from './htmlrenderer';
+
 /**
  * Transforms mimetypes into HTMLElements
  */
-class Transformime {
+export class Transformime {
 
     /**
      * Public constructor
