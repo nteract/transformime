@@ -8,7 +8,15 @@ import {RendererBase} from './rendererbase';
 export class ImageRenderer extends RendererBase {
     constructor(mimetype) {
         super();
-        this.mimetype = mimetype;
+        this._mimetype = mimetype;
+    }
+
+    get mimetype() {
+        return this._mimetype;
+    }
+
+    set mimetype(mimetype) {
+       this._mimetype = mimetype;
     }
 
     transform(data, doc) {
