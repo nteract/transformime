@@ -43,7 +43,7 @@ Images get handled as base64 encoded data and become embedded elements.
 
 ### Working with iframes
 
-```
+```javascript
 > // Assume document is defined (either in browser or from jsdoc) as well as transformer
 > // Create an arbitrary iframe and slap it in the body of the document
 > var iframe = document.createElement("iframe");
