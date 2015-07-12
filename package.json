@@ -23,6 +23,5 @@
   },
   "homepage": "https://github.com/nteract/transformime#readme",
   "dependencies": {
-    "btoa": "1"
   }
 }
