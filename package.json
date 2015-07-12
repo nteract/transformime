@@ -4,7 +4,7 @@
   "description": "Transforms MIMEtypes to HTML Elements",
   "main": "index.js",
   "scripts": {
-    "test": "echo 'tests are cool'"
+    "test": "echo 'tests are not cool'"
   },
   "repository": {
     "type": "git",
@@ -21,5 +21,8 @@
   "bugs": {
     "url": "https://github.com/nteract/transformime/issues"
   },
-  "homepage": "https://github.com/nteract/transformime#readme"
+  "homepage": "https://github.com/nteract/transformime#readme",
+  "dependencies": {
+    "btoa": "1"
+  }
 }

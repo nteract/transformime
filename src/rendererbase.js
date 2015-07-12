@@ -5,7 +5,7 @@ export class RendererBase {
         throw new Error('mimetype not implemented');
     }
 
-    render(data, metadata) {
+    transform(data, parentDoc) {
         throw new Error('render not implemented');
     }
 }
