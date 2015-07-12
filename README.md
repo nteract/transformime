@@ -6,10 +6,13 @@ Transforms MIMEtype+data to HTML Elements
 
 Intended to be used in context of Jupyter and IPython projects, particularly by display areas.
 
-## Installation
+## Development
 
 ```
-npm install transformime
+git clone https://github.com/nteract/transformime
+cd transformime
+npm install
+npm run build
 ```
 
 ## Usage
@@ -18,7 +21,7 @@ Transformime works with jsdoc and the browser (once transpiled).
 
 Note that the examples below use `babel-node` and work from a git clone.
 
-### Using with jsdoc
+### Using with jsdom
 
 ```javascript
 > var jsdom = require('jsdom')
