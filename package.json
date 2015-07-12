@@ -2,16 +2,17 @@
   "name": "transformime",
   "version": "0.0.0",
   "description": "Transforms MIMEtypes to HTML Elements",
-  "main": "index.js",
+  "main": "lib/transformime.js",
   "scripts": {
-    "prebuild": "mkdirp dist && npm run clean",
-    "test": "echo 'tests are not cool'",
-    "build": "npm run build:es5js && npm run build:browserjs",
-    "build:es5js": "babel src --out-dir dist/es5 --source-maps",
-    "build:browserjs": "browserify dist/es5/*.js --outfile dist/transformime.js",
+    "prebuild": "mkdirp lib && mkdirp dist && npm run clean",
+    "test": "echo 'tests are cool, we should think about a testing framework'",
+    "build": "npm run build:es5 && npm run build:browser",
+    "build:es5": "babel src --out-dir lib/ --source-maps",
+    "build:browser": "browserify lib/*.js --outfile dist/transformime.js",
+    "prepublish": "npm run build",
     "watch": "npm run watch:build -s",
     "watch:build": "nodemon -q -w src/ --ext '.' --exec 'npm run build'",
-    "clean": "rimraf dist/*"
+    "clean": "rimraf lib/* dist/*"
   },
   "repository": {
     "type": "git",
