@@ -57,7 +57,8 @@ export class Transformime {
 
     /**
      * Transforms all of the mime types in a mime bundle into HTMLElements.
-     * @param  {object} bundle - mime bundle
+     * @param  {any}      bundle {mimetype1: data1, mimetype2: data2, ...}
+     * @param  {Document} doc    Any of window.document, iframe.contentDocument
      * @return {HTMLElement[]}
      */
     transformAll(bundle, doc) {
@@ -66,8 +67,8 @@ export class Transformime {
 
     /**
      * Transforms a specific mime type into an HTMLElement.
-     * @param  {object} data
-     * @param  {string} mimetype
+     * @param  {any}    data     Raw data
+     * @param  {string} mimetype MIME type (e.g. text/html, image/png)
      * @return {HTMLElement}
      */
     transform(data, mimetype, doc) {
@@ -82,7 +83,7 @@ export class Transformime {
     /**
      * Gets a renderer matching the mimetype
      * @param  string mimetype the data type (e.g. text/plain, text/html, image/png)
-     * @return {Renderer} Matching renderer
+     * @return {RendererBase} Matching renderer
      */
     get_renderer(mimetype) {
         for (let renderer of this.renderers) {
