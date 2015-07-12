@@ -44,8 +44,7 @@ export class Transformime {
 
         if (bundle.data){
             let data = bundle.data[richRenderer.mimetype];
-            element = richRenderer.transform(data, doc || document);
-            return element;
+            return this.transform(data, richRenderer.mimetype, doc);
         }
 
         throw new Error('Renderer for ' + Object.keys(json).join(', ') + ' not found.');
