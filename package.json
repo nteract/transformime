@@ -4,7 +4,6 @@
   "description": "Transforms MIMEtypes to HTML Elements",
   "main": "index.js",
   "scripts": {
-    "postinstall": "npm run build",
     "prebuild": "mkdirp dist && npm run clean",
     "test": "echo 'tests are not cool'",
     "build": "npm run build:es5js && npm run build:browserjs",
