@@ -31,7 +31,7 @@ export class Transformime {
      * @param  {object} bundle - mime bundle
      * @return {HTMLElement}
      */
-    transformRichest(bundle) {
+    transformRichest(bundle, doc) {
         let element;
         let richRenderer = this.fallbackRenderer;
 
@@ -44,7 +44,7 @@ export class Transformime {
 
         if (bundle.data){
             let data = bundle.data[richRenderer.mimetype];
-            element = richRenderer.transform(data);
+            element = richRenderer.transform(data, doc || document);
             return element;
         }
 
@@ -56,8 +56,8 @@ export class Transformime {
      * @param  {object} bundle - mime bundle
      * @return {HTMLElement[]}
      */
-    transformAll(bundle) {
-        return bundle.map(function(mimetype) { return this.transformMimetype(bundle[mimetype]); });
+    transformAll(bundle, doc) {
+        return bundle.map(function(mimetype) { return this.transformMimetype(bundle[mimetype], mimetype, doc); });
     }
 
     /**
@@ -66,10 +66,10 @@ export class Transformime {
      * @param  {string} mimetype
      * @return {HTMLElement}
      */
-    transform(data, mimetype) {
+    transform(data, mimetype, doc) {
         let renderer = this.get_renderer(mimetype);
         if (renderer) {
-            return renderer.transform(data);
+            return renderer.transform(data, doc || document);
         }
 
         throw new Error('Renderer for mimetype ' + mimetype + ' not found.');
