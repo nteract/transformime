@@ -26,7 +26,7 @@ export class Transformime {
     }
 
     /**
-     * Transforms a mime bundle, using the richest available representation, 
+     * Transforms a mime bundle, using the richest available representation,
      * into an HTMLElement.
      * @param  {object} bundle - mime bundle
      * @return {HTMLElement}
@@ -47,7 +47,7 @@ export class Transformime {
             return this.transform(data, richRenderer.mimetype, doc);
         }
 
-        throw new Error('Renderer for ' + Object.keys(json).join(', ') + ' not found.');
+        throw new Error('Renderer for ' + Object.keys(bundle).join(', ') + ' not found.');
     }
 
     /**
@@ -60,7 +60,7 @@ export class Transformime {
     }
 
     /**
-     * Transorms a specific mime type into an HTMLElement.
+     * Transforms a specific mime type into an HTMLElement.
      * @param  {object} data
      * @param  {string} mimetype
      * @return {HTMLElement}
