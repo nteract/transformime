@@ -2,6 +2,7 @@
 
 import {TextRenderer} from './textrenderer';
 import {DefaultRenderer} from './defaultrenderer';
+import {ImageRenderer} from './imagerenderer';
 import {HTMLRenderer} from './htmlrenderer';
 
 /**
@@ -17,6 +18,8 @@ export class Transformime {
         // Initialize instance variables.
         this.renderers = [
             new TextRenderer(),
+            new ImageRenderer('image/png'),
+            new ImageRenderer('image/jpeg'),
             new HTMLRenderer()
         ];
         this.fallbackRenderer = new DefaultRenderer();
