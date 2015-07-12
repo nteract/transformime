@@ -8,7 +8,7 @@
     "prebuild": "mkdirp dist && npm run clean",
     "test": "echo 'tests are not cool'",
     "build": "npm run build:js",
-    "build:js": "browserify src/*.js -t babelify --outfile dist/jupyter-display-area.js",
+    "build:js": "browserify src/*.js -t babelify --outfile dist/transformime.js",
     "watch": "npm run watch:build -s",
     "watch:build": "nodemon -q -w src/ --ext '.' --exec 'npm run build'",
     "clean": "rimraf dist/*"
