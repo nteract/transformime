@@ -6,27 +6,23 @@ Transforms MIMEtype+data to HTML Elements
 
 Intended to be used in context of Jupyter and IPython projects, particularly by display areas.
 
-## Development
+## Installation
 
 ```
-git clone https://github.com/nteract/transformime
-cd transformime
-npm install
-npm run build
+npm install transformime
 ```
+
 
 ## Usage
 
 Transformime works with jsdom and the browser (once transpiled).
 
-Note that the examples below use `babel-node` and work from a git clone.
-
 ### Using with jsdom
 
 ```javascript
 > var jsdom = require('jsdom')
-> var document = jsdom.jsdom()
-> var Transformime = require('./src/transformime').Transformime;
+> var document = jsdom.jsdom() // could use window.document
+> var Transformime = require('transformime').Transformime;
 > var transformer = new Transformime();
 > var el = transformer.transform("<h1>Woo</h1>", "text/html", document)
 > el.innerHTML
@@ -58,3 +54,11 @@ Images get handled as base64 encoded data and become embedded elements.
 '<div><h1>mimetic</h1></div>'
 ```
 
+## Development
+
+```
+git clone https://github.com/nteract/transformime
+cd transformime
+npm install
+npm run build
+```
