@@ -7,8 +7,8 @@ export class DefaultRenderer extends RendererBase {
         return 'unknown';
     }
 
-    render(data) {
-        var el = document.createElement('div');
+    transform(data, doc) {
+        var el = doc.createElement('div');
         el.textContent = JSON.stringify(data);
         return el;
     }

@@ -2,6 +2,7 @@
 
 import {TextRenderer} from './textrenderer';
 import {DefaultRenderer} from './defaultrenderer';
+import {ImageRenderer} from './imagerenderer';
 import {HTMLRenderer} from './htmlrenderer';
 
 /**
@@ -17,14 +18,20 @@ export class Transformime {
         // Initialize instance variables.
         this.renderers = [
             new TextRenderer(),
+            new ImageRenderer('image/png'),
+            new ImageRenderer('image/jpeg'),
             new HTMLRenderer()
         ];
         this.fallbackRenderer = new DefaultRenderer();
     }
 
-    transformRichest(bundle) {
-        this._validateMimebundle(bundle);
-
+    /**
+     * Transforms a mime bundle, using the richest available representation, 
+     * into an HTMLElement.
+     * @param  {object} bundle - mime bundle
+     * @return {HTMLElement}
+     */
+    transformRichest(bundle, doc) {
         let element;
         let richRenderer = this.fallbackRenderer;
 
@@ -37,43 +44,33 @@ export class Transformime {
 
         if (bundle.data){
             let data = bundle.data[richRenderer.mimetype];
-            element = richRenderer.render(data, metadata);
-            return element;
+            return this.transform(data, richRenderer.mimetype, doc);
         }
 
         throw new Error('Renderer for ' + Object.keys(json).join(', ') + ' not found.');
     }
 
-    transformAll(bundle) {
-        this._validateMimebundle(bundle);
-        return bundle.map(function(mimetype) { return this.transformMimetype(bundle[mimetype]); });
-    }
-
-    transformMimetype(data, mimetype) {
-        let renderer = this.get_renderer(mimetype);
-        if (renderer) {
-            return renderer.render(data, metadata);
-        }
-
-        throw new Error('Renderer for mimetype ' + mimetype + ' not found.');
+    /**
+     * Transforms all of the mime types in a mime bundle into HTMLElements.
+     * @param  {object} bundle - mime bundle
+     * @return {HTMLElement[]}
+     */
+    transformAll(bundle, doc) {
+        return bundle.map(function(mimetype) { return this.transformMimetype(bundle[mimetype], mimetype, doc); });
     }
 
     /**
-     * Validate a mime bundle.
-     * @param  {object} bundle
-     * @return {object} bundle
+     * Transorms a specific mime type into an HTMLElement.
+     * @param  {object} data
+     * @param  {string} mimetype
+     * @return {HTMLElement}
      */
-    _validateMimebundle(bundle) {
-        if (typeof bundle.data !== 'object') {
-            console.warn('Mimebundle missing data', bundle);
-            bundle.data = {};
+    transform(data, mimetype, doc) {
+        let renderer = this.get_renderer(mimetype);
+        if (renderer) {
+            return renderer.transform(data, doc || document);
         }
 
-        if (typeof bundle.metadata !== 'object') {
-            console.warn('Mimebundle missing metadata', bundle);
-            bundle.metadata = {};
-        }
-
-        return bundle;
+        throw new Error('Renderer for mimetype ' + mimetype + ' not found.');
     }
 }
