@@ -73,4 +73,18 @@ export class Transformime {
 
         throw new Error('Renderer for mimetype ' + mimetype + ' not found.');
     }
+
+    /**
+     * Gets a renderer matching the mimetype
+     * @param  string mimetype the data type (e.g. text/plain, text/html, image/png)
+     * @return {Renderer} Matching renderer
+     */
+    get_renderer(mimetype) {
+        for (let renderer of this.renderers) {
+            if (mimetype === renderer.mimetype) {
+                return renderer;
+            }
+        }
+        return null;
+    }
 }
