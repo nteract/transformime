@@ -7,8 +7,8 @@ export class TextRenderer extends RendererBase {
         return 'text/plain';
     }
 
-    transform(data, parentDoc) {
-        var el = (parentDoc || document).createElement('div');
+    transform(data, doc) {
+        var el = (doc || document).createElement('div');
         el.textContent = data;
         return el;
     }

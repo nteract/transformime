@@ -7,8 +7,8 @@ export class HTMLRenderer extends RendererBase {
         return 'text/html';
     }
 
-    transform(data, parentDoc) {
-        var el = (parentDoc || document).createElement('div');
+    transform(data, doc) {
+        var el = (doc || document).createElement('div');
         // TODO: Pull scripts from inside, create elements for them
         el.innerHTML = data;
         return el;
