@@ -17,7 +17,7 @@ npm run build
 
 ## Usage
 
-Transformime works with jsdoc and the browser (once transpiled).
+Transformime works with jsdom and the browser (once transpiled).
 
 Note that the examples below use `babel-node` and work from a git clone.
 
@@ -47,7 +47,7 @@ Images get handled as base64 encoded data and become embedded elements.
 ### Working with iframes
 
 ```javascript
-> // Assume document is defined (either in browser or from jsdoc) as well as transformer
+> // Assume document is defined (either in browser or from jsdom) as well as transformer
 > // Create an arbitrary iframe and slap it in the body of the document
 > var iframe = document.createElement("iframe");
 > document.querySelector('body').appendChild(iframe);
