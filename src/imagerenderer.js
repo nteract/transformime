@@ -7,6 +7,7 @@ import {RendererBase} from './rendererbase';
  */
 export class ImageRenderer extends RendererBase {
     constructor(mimetype) {
+        super();
         this.mimetype = mimetype;
     }
 

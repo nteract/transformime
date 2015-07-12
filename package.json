@@ -4,7 +4,14 @@
   "description": "Transforms MIMEtypes to HTML Elements",
   "main": "index.js",
   "scripts": {
-    "test": "echo 'tests are not cool'"
+    "postinstall": "npm run build",
+    "prebuild": "mkdirp dist && npm run clean",
+    "test": "echo 'tests are not cool'",
+    "build": "npm run build:js",
+    "build:js": "browserify src/*.js -t babelify --outfile dist/jupyter-display-area.js",
+    "watch": "npm run watch:build -s",
+    "watch:build": "nodemon -q -w src/ --ext '.' --exec 'npm run build'",
+    "clean": "rimraf dist/*"
   },
   "repository": {
     "type": "git",
@@ -23,5 +30,10 @@
   },
   "homepage": "https://github.com/nteract/transformime#readme",
   "dependencies": {
+    "babelify": "^6.1.2",
+    "browserify": "^10.2.6",
+    "mkdirp": "^0.5.1",
+    "nodemon": "^1.3.7",
+    "rimraf": "^2.4.1"
   }
 }
