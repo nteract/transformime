@@ -12,23 +12,28 @@ export class Transformime {
 
     /**
      * Public constructor
+     * @param  {RendererBase[]} renderers       list of renderers, in reverse
+     *                                          priority order
+     * @param  {RendererBase} fallbackRenderer  renderer to default to when a
+     *                                          mimetype is unsupported
      */
-    constructor() {
+    constructor(renderers, fallbackRenderer) {
 
         // Initialize instance variables.
-        this.renderers = [
+        this.renderers = renderers || [
             new TextRenderer(),
             new ImageRenderer('image/png'),
             new ImageRenderer('image/jpeg'),
             new HTMLRenderer()
         ];
-        this.fallbackRenderer = new DefaultRenderer();
+        this.fallbackRenderer = fallbackRenderer || new DefaultRenderer();
     }
 
     /**
      * Transforms a mime bundle, using the richest available representation,
      * into an HTMLElement.
-     * @param  {object} bundle - mime bundle
+     * @param  {any}      bundle {mimetype1: data1, mimetype2: data2, ...}
+     * @param  {Document} doc    Any of window.document, iframe.contentDocument
      * @return {HTMLElement}
      */
     transformRichest(bundle, doc) {
