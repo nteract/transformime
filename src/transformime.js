@@ -42,17 +42,17 @@ export class Transformime {
 
         // Choose the last renderer as the most rich
         for (let renderer of this.renderers) {
-            if (bundle.data && renderer.mimetype in bundle.data) {
+            if (renderer.mimetype in bundle) {
                 richRenderer = renderer;
             }
         }
 
-        if (bundle.data){
-            let data = bundle.data[richRenderer.mimetype];
+        if (richRenderer){
+            let data = bundle[richRenderer.mimetype];
             return this.transform(data, richRenderer.mimetype, doc);
         }
 
-        throw new Error('Renderer for ' + Object.keys(bundle).join(', ') + ' not found.');
+        throw new Error('Renderer(s) for ' + Object.keys(bundle).join(', ') + ' not found.');
     }
 
     /**
