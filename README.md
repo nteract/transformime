@@ -22,4 +22,11 @@ npm install transformime
 '<h1>Woo</h1>'
 > el.textContent
 'Woo'
+> // Send an image over
+> el = transformer.transform("R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7", "image/png", document)
+> el.src
+'data:image/png;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7'
 ```
+
+Transformime works with jsdoc and the browser (once transpiled).
+
