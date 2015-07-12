@@ -14,4 +14,5 @@ npm install transformime
 
 ```
 var transformime = require('transformime');
+// haha this totally doesn't work yet but it should
 ```
