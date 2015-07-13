@@ -17,7 +17,7 @@ npm install transformime
 
 ## Usage
 
-Transformime works with jsdom and the browser (once transpiled).
+Transformime works in the browser (via browserify) and with jsdom!
 
 ### Using with jsdom
 
