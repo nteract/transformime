@@ -2,6 +2,8 @@
 
 [![Build Status](https://travis-ci.org/nteract/transformime.svg)](https://travis-ci.org/nteract/transformime)
 
+![Optimus MIME]()
+
 Transforms MIMEtype+data to HTML Elements
 
 Intended to be used in context of Jupyter and IPython projects, particularly by display areas.
