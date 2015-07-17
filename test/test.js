@@ -54,14 +54,20 @@ describe('Transformime defaults', function() {
 
 describe('Transformime', function() {
     before(function() {
-        this.dummyRenderer = new DummyRenderer("transformime/dummy");
-        this.renderers = [this.dummyRenderer];
+        this.dummyRenderer = new DummyRenderer("transformime/dummy1");
+        this.dummyRenderer2 = new DummyRenderer("transformime/dummy2");
+        this.dummyRenderer3 = new DummyRenderer("transformime/dummy3");
+        this.renderers = [
+            this.dummyRenderer,
+            this.dummyRenderer2,
+            this.dummyRenderer3
+        ];
         this.t = new Transformime(this.renderers);
         this.document = jsdom.jsdom();
     });
     describe('transform', function() {
         it('should have called our DummyRender', function() {
-            var el = this.t.transform("dummy-data", "transformime/dummy", this.document);
+            var el = this.t.transform("dummy-data", "transformime/dummy1", this.document);
 
             assert.equal(this.dummyRenderer.lastData, "dummy-data");
             assert.equal(this.dummyRenderer.lastDoc, this.document);
@@ -77,11 +83,23 @@ describe('Transformime', function() {
     });
     describe('getRenderer', function() {
         it('should get the right renderer for a given mimetype', function() {
-            let renderer = this.t.getRenderer('transformime/dummy');
+            let renderer = this.t.getRenderer('transformime/dummy1');
             assert.equal(this.dummyRenderer, renderer);
         });
         it('should return null with an unknown mimetype', function() {
             assert.isNull(this.t.getRenderer('cats/calico'), 'found a renderer when I shouldn\'t have');
+        });
+    });
+    describe('transformRichest', function() {
+        it('should choose the lastmost of the renderers when picking from a rich set', function() {
+            let mimeBundle = {
+                'transformime/dummy1': 'dummy data 1',
+                'transformime/dummy2': 'dummy data 2',
+                'transformime/dummy3': 'dummy data 3'
+            };
+
+            this.t.transformRichest(mimeBundle, this.document);
+
         });
     });
 });
