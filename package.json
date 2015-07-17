@@ -5,7 +5,7 @@
   "main": "lib/transformime.js",
   "scripts": {
     "prebuild": "mkdirp lib && mkdirp dist && npm run clean",
-    "test": "echo 'tests are cool, we should think about a testing framework'",
+    "test": "mocha --compilers js:babel/register",
     "build": "npm run build:es5 && npm run build:browser",
     "build:es5": "babel src --out-dir lib/ --source-maps",
     "build:browser": "browserify lib/*.js --outfile dist/transformime.js",
@@ -36,6 +36,7 @@
     "browserify": "^10.2.6",
     "jsdom": "^5.6.0",
     "mkdirp": "^0.5.1",
+    "mocha": "^2.2.5",
     "nodemon": "^1.3.7",
     "rimraf": "^2.4.1"
   }
