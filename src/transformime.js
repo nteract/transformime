@@ -73,7 +73,7 @@ export class Transformime {
      * @return {Promise<HTMLElement>}
      */
     transform(data, mimetype, doc) {
-        let renderer = this.get_renderer(mimetype);
+        let renderer = this.getRenderer(mimetype);
         if (renderer) {
             // Don't assume the transformation will return a promise.  Also
             // don't assume the transformation will succeed.
@@ -92,7 +92,7 @@ export class Transformime {
      * @param  string mimetype the data type (e.g. text/plain, text/html, image/png)
      * @return {RendererBase} Matching renderer
      */
-    get_renderer(mimetype) {
+    getRenderer(mimetype) {
         for (let renderer of this.renderers) {
             if (mimetype === renderer.mimetype) {
                 return renderer;
