@@ -22,6 +22,6 @@ export class ImageRenderer extends RendererBase {
     transform(data, doc) {
         let img = doc.createElement('img');
         img.src = 'data:' + this.mimetype + ';base64,'+ data;
-        return Promise.resolve(img);
+        return img;
     }
 }

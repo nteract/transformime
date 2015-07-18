@@ -52,7 +52,7 @@ export class Transformime {
             return this.transform(data, richRenderer.mimetype, doc);
         }
 
-        throw new Error('Renderer(s) for ' + Object.keys(bundle).join(', ') + ' not found.');
+        return Promise.reject(new Error('Renderer(s) for ' + Object.keys(bundle).join(', ') + ' not found.'));
     }
 
     /**
@@ -75,10 +75,16 @@ export class Transformime {
     transform(data, mimetype, doc) {
         let renderer = this.get_renderer(mimetype);
         if (renderer) {
-            return renderer.transform(data, doc || document);
+            // Don't assume the transformation will return a promise.  Also
+            // don't assume the transformation will succeed.
+            try {
+                return Promise.resolve(renderer.transform(data, doc || document));
+            } catch (e) {
+                return Promise.reject(e);
+            }
         }
 
-        throw new Error('Renderer for mimetype ' + mimetype + ' not found.');
+        return Promise.reject(new Error('Renderer for mimetype ' + mimetype + ' not found.'));
     }
 
     /**

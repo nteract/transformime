@@ -11,6 +11,6 @@ export class HTMLRenderer extends RendererBase {
         var el = doc.createElement('div');
         // TODO: Pull scripts from inside, create elements for them
         el.innerHTML = data;
-        return Promise.resolve(el);
+        return el;
     }
 }
