@@ -10,6 +10,6 @@ export class DefaultRenderer extends RendererBase {
     transform(data, doc) {
         var el = doc.createElement('div');
         el.textContent = JSON.stringify(data);
-        return el;
+        return Promise.resolve(el);
     }
 }

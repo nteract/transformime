@@ -10,6 +10,6 @@ export class TextRenderer extends RendererBase {
     transform(data, doc) {
         var el = doc.createElement('pre');
         el.textContent = data;
-        return el;
+        return Promise.resolve(el);
     }
 }

@@ -34,7 +34,7 @@ export class Transformime {
      * into an HTMLElement.
      * @param  {any}      bundle {mimetype1: data1, mimetype2: data2, ...}
      * @param  {Document} doc    Any of window.document, iframe.contentDocument
-     * @return {HTMLElement}
+     * @return {Promise<HTMLElement>}
      */
     transformRichest(bundle, doc) {
         let element;
@@ -59,17 +59,18 @@ export class Transformime {
      * Transforms all of the mime types in a mime bundle into HTMLElements.
      * @param  {any}      bundle {mimetype1: data1, mimetype2: data2, ...}
      * @param  {Document} doc    Any of window.document, iframe.contentDocument
-     * @return {HTMLElement[]}
+     * @return {Promise<HTMLElement[]>}
      */
     transformAll(bundle, doc) {
-        return bundle.map(function(mimetype) { return this.transformMimetype(bundle[mimetype], mimetype, doc); });
+        var promises = bundle.map(function(mimetype) { return this.transformMimetype(bundle[mimetype], mimetype, doc); });
+        return Promise.all(promises);
     }
 
     /**
      * Transforms a specific mime type into an HTMLElement.
      * @param  {any}    data     Raw data
      * @param  {string} mimetype MIME type (e.g. text/html, image/png)
-     * @return {HTMLElement}
+     * @return {Promise<HTMLElement>}
      */
     transform(data, mimetype, doc) {
         let renderer = this.get_renderer(mimetype);
