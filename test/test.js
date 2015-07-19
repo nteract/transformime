@@ -102,7 +102,7 @@ describe('Transformime', function() {
                 let el = this.t.transformRichest(mimeBundle, this.document);
                 assert.isUndefined(this.dummyRenderer1.lastData);
                 assert.isUndefined(this.dummyRenderer2.lastData);
-                assert(this.dummyRenderer3.lastData, "dummy data 3");
+                assert.equal(this.dummyRenderer3.lastData, "dummy data 3");
             });
             it('when called with a lesser mimebundle, choose most rich', function() {
                 let mimeBundle = {
@@ -112,7 +112,7 @@ describe('Transformime', function() {
 
                 let el = this.t.transformRichest(mimeBundle, this.document);
                 assert.isUndefined(this.dummyRenderer1.lastData);
-                assert(this.dummyRenderer2.lastData, "dummy data 2");
+                assert.equal(this.dummyRenderer2.lastData, "dummy data 2");
                 assert.isUndefined(this.dummyRenderer3.lastData);
             });
             it('when called with mimetypes it doesn\'t know, it uses supported mimetypes', function() {
@@ -125,18 +125,21 @@ describe('Transformime', function() {
                 };
 
                 let el = this.t.transformRichest(mimeBundle, this.document);
-                assert(this.dummyRenderer1.lastData, "dummy data 1");
+                assert.equal(this.dummyRenderer1.lastData, "dummy data 1");
                 assert.isUndefined(this.dummyRenderer2.lastData);
                 assert.isUndefined(this.dummyRenderer3.lastData);
             });
-            it('when called with no supported mimetypes, it throws an error', function(){
+            it('when called with no supported mimetypes, it uses the fallbackRenderer', function(){
                 let mimeBundle = {
                     'video/quicktime': 'cat vid',
                     'application/zip': 'zippy'
                 };
 
-                expect(() => this.t.transformRichest(mimeBundle, this.document))
-                    .to.throw('Renderer(s) for mimetype video/quicktime, application/zip not found.');
+                this.t.fallbackRenderer = new DummyRenderer("fallback/test");
+                let el = this.t.transformRichest(mimeBundle, this.document);
+
+                assert.equal(this.t.fallbackRenderer.lastData, 'omg this is going to fail');
+
             });
         });
     });
