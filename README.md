@@ -26,9 +26,12 @@ Transformime works in the browser (via browserify) and with jsdom!
 > var document = jsdom.jsdom() // could use window.document
 > var Transformime = require('transformime').Transformime;
 > var transformer = new Transformime();
-> p1.then(function(el){ console.log(el.innerHTML); console.log(el.textContent)});
+> p1.then(function(el){
+...   console.log(el.innerHTML);
+...   console.log(el.textContent)
+... });
 <h1>Woo</h1>
-Woo'
+Woo
 ```
 
 Images get handled as base64 encoded data and become embedded elements.
