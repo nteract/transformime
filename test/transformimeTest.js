@@ -27,9 +27,6 @@ class DummyRenderer extends RendererBase {
     transform(data, doc) {
         let pre = doc.createElement('pre');
         pre.textContent = data;
-
-        this.lastData = data;
-        this.lastDoc = doc;
         return pre;
     }
 }
@@ -67,18 +64,22 @@ describe('Transformime', function() {
     });
     describe('transform', function() {
         it('should have called our DummyRender', function() {
-            var el = this.t.transform("dummy-data", "transformime/dummy1", this.document);
+            var elPromise = this.t.transform("dummy-data", "transformime/dummy1", this.document);
 
-            assert.equal(this.dummyRenderer1.lastData, "dummy-data");
-            assert.equal(this.dummyRenderer1.lastDoc, this.document);
+            elPromise.then((el) => {
+                assert.equal(this.dummyRenderer1.lastData, "dummy-data");
+                assert.equal(this.dummyRenderer1.lastDoc, this.document);
 
-            // el should be an HTMLElement, which only exists in jsdom or on a
-            // real document.
-            assert(el instanceof this.document.defaultView.HTMLElement);
+                // el should be an HTMLElement, which only exists in jsdom or on a
+                // real document.
+                assert(el instanceof this.document.defaultView.HTMLElement);
+            });
+
         });
         it('should fail when the mimetype is not known', function() {
-            expect(() => this.t.transform("my-data", "transformime/unknown", this.doc))
-                .to.throw('Renderer for mimetype transformime/unknown not found.');
+            let elPromise = this.t.transform("my-data", "transformime/unknown", this.doc);
+
+            elPromise.should.be.rejectedWith('Renderer for mimetype transformime/unknown not found.');
         });
     });
     describe('getRenderer', function() {
@@ -99,10 +100,14 @@ describe('Transformime', function() {
                     'transformime/dummy3': 'dummy data 3'
                 };
 
-                let el = this.t.transformRichest(mimeBundle, this.document);
-                assert.isUndefined(this.dummyRenderer1.lastData);
-                assert.isUndefined(this.dummyRenderer2.lastData);
-                assert.equal(this.dummyRenderer3.lastData, "dummy data 3");
+                let elPromise = this.t.transformRichest(mimeBundle, this.document);
+                elPromise.then( () => {
+                    assert.isUndefined(this.dummyRenderer1.lastData);
+                    assert.isUndefined(this.dummyRenderer2.lastData);
+                    assert.equal(this.dummyRenderer3.lastData, "dummy data 3");
+                    done();
+                });
+
             });
             it('when called with a lesser mimebundle, choose most rich', function() {
                 let mimeBundle = {
@@ -110,10 +115,13 @@ describe('Transformime', function() {
                     'transformime/dummy2': 'dummy data 2'
                 };
 
-                let el = this.t.transformRichest(mimeBundle, this.document);
-                assert.isUndefined(this.dummyRenderer1.lastData);
-                assert.equal(this.dummyRenderer2.lastData, "dummy data 2");
-                assert.isUndefined(this.dummyRenderer3.lastData);
+                let elPromise = this.t.transformRichest(mimeBundle, this.document);
+                elPromise.then( () => {
+                    assert.isUndefined(this.dummyRenderer1.lastData);
+                    assert.equal(this.dummyRenderer2.lastData, "dummy data 2");
+                    assert.isUndefined(this.dummyRenderer3.lastData);
+                    done();
+                });
             });
             it('when called with mimetypes it doesn\'t know, it uses supported mimetypes', function() {
                 let mimeBundle = {
@@ -124,10 +132,13 @@ describe('Transformime', function() {
                     'application/zip': 'zippy'
                 };
 
-                let el = this.t.transformRichest(mimeBundle, this.document);
-                assert.equal(this.dummyRenderer1.lastData, "dummy data 1");
-                assert.isUndefined(this.dummyRenderer2.lastData);
-                assert.isUndefined(this.dummyRenderer3.lastData);
+                let elPromise = this.t.transformRichest(mimeBundle, this.document);
+                elPromise.then( () => {
+                    assert.equal(this.dummyRenderer1.lastData, "dummy data 1");
+                    assert.isUndefined(this.dummyRenderer2.lastData);
+                    assert.isUndefined(this.dummyRenderer3.lastData);
+                    done();
+                });
             });
             it('when called with no supported mimetypes, it uses the fallbackRenderer', function(){
                 let mimeBundle = {
@@ -136,10 +147,12 @@ describe('Transformime', function() {
                 };
 
                 this.t.fallbackRenderer = new DummyRenderer("fallback/test");
-                let el = this.t.transformRichest(mimeBundle, this.document);
+                let elPromise = this.t.transformRichest(mimeBundle, this.document);
 
-                assert.equal(this.t.fallbackRenderer.lastData, 'omg this is going to fail');
-
+                elPromise.then( () => {
+                    assert.equal(this.t.fallbackRenderer.lastData, 'omg this is going to fail');
+                    done();
+                });
             });
         });
     });
