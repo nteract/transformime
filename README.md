@@ -14,16 +14,18 @@ Intended to be used in context of Jupyter and IPython projects, particularly by 
 npm install transformime
 ```
 
-
 ## Usage
 
 Transformime works in the browser (via browserify) and with jsdom!
 
-### Using with jsdom
+It returns promises for all the HTMLElements.
+
+### Simple usage
 
 ```javascript
-> var jsdom = require('jsdom')
-> var document = jsdom.jsdom() // could use window.document
+> // In node we'll need a DOM to work with
+> var document = require('jsdom').jsdom();
+> // For browsers, they can pass document around (or an iframe's contentDocument)
 > var Transformime = require('transformime').Transformime;
 > var transformer = new Transformime();
 > p1.then(function(el){
