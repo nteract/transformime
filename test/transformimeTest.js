@@ -1,6 +1,6 @@
 import {assert} from 'chai';
 
-var jsdom = require('jsdom');
+import {jsdom} from 'jsdom';
 
 import {Transformime} from '../src/transformime';
 import {DefaultRenderer} from '../src/defaultrenderer';
@@ -31,7 +31,7 @@ class DummyRenderer{
 
 describe('Transformime defaults', function() {
     before(function() {
-        this.document = jsdom.jsdom();
+        this.document = jsdom();
     });
     describe('default constructor', function() {
         before(function(){
@@ -57,7 +57,7 @@ describe('Transformime', function() {
             this.dummyRenderer3
         ];
         this.t = new Transformime(this.renderers);
-        this.document = jsdom.jsdom();
+        this.document = jsdom();
     });
     describe('transform', function() {
         it('should have called our DummyRender', function() {
