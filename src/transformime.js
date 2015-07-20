@@ -34,7 +34,7 @@ export class Transformime {
      * into an HTMLElement.
      * @param  {any}      bundle {mimetype1: data1, mimetype2: data2, ...}
      * @param  {Document} doc    Any of window.document, iframe.contentDocument
-     * @return {HTMLElement}
+     * @return {Promise<HTMLElement>}
      */
     transformRichest(bundle, doc) {
         let element;
@@ -52,32 +52,39 @@ export class Transformime {
             return this.transform(data, richRenderer.mimetype, doc);
         }
 
-        throw new Error('Renderer(s) for ' + Object.keys(bundle).join(', ') + ' not found.');
+        return Promise.reject(new Error('Renderer(s) for ' + Object.keys(bundle).join(', ') + ' not found.'));
     }
 
     /**
      * Transforms all of the mime types in a mime bundle into HTMLElements.
      * @param  {any}      bundle {mimetype1: data1, mimetype2: data2, ...}
      * @param  {Document} doc    Any of window.document, iframe.contentDocument
-     * @return {HTMLElement[]}
+     * @return {Promise<HTMLElement[]>}
      */
     transformAll(bundle, doc) {
-        return bundle.map(function(mimetype) { return this.transformMimetype(bundle[mimetype], mimetype, doc); });
+        var promises = bundle.map(function(mimetype) { return this.transformMimetype(bundle[mimetype], mimetype, doc); });
+        return Promise.all(promises);
     }
 
     /**
      * Transforms a specific mime type into an HTMLElement.
      * @param  {any}    data     Raw data
      * @param  {string} mimetype MIME type (e.g. text/html, image/png)
-     * @return {HTMLElement}
+     * @return {Promise<HTMLElement>}
      */
     transform(data, mimetype, doc) {
         let renderer = this.get_renderer(mimetype);
         if (renderer) {
-            return renderer.transform(data, doc || document);
+            // Don't assume the transformation will return a promise.  Also
+            // don't assume the transformation will succeed.
+            try {
+                return Promise.resolve(renderer.transform(data, doc || document));
+            } catch (e) {
+                return Promise.reject(e);
+            }
         }
 
-        throw new Error('Renderer for mimetype ' + mimetype + ' not found.');
+        return Promise.reject(new Error('Renderer for mimetype ' + mimetype + ' not found.'));
     }
 
     /**
