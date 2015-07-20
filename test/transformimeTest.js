@@ -79,7 +79,10 @@ describe('Transformime', function() {
         it('should fail when the mimetype is not known', function() {
             let elPromise = this.t.transform("my-data", "transformime/unknown", this.doc);
 
-            elPromise.should.be.rejectedWith('Renderer for mimetype transformime/unknown not found.');
+            elPromise.catch((err) => {
+                assert.equal(err, 'Renderer for mimetype transformime/unknown not found.');
+                done();
+            });
         });
     });
     describe('getRenderer', function() {
