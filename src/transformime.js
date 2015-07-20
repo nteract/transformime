@@ -31,7 +31,7 @@ export class Transformime {
 
     /**
      * Transforms a mime bundle, using the richest available representation,
-     * into an HTMLElement.
+     * into an HTMLElement. Uses fallback renderer otherwise.
      * @param  {any}      bundle {mimetype1: data1, mimetype2: data2, ...}
      * @param  {Document} doc    Any of window.document, iframe.contentDocument
      * @return {Promise<HTMLElement>}
@@ -67,13 +67,15 @@ export class Transformime {
     }
 
     /**
-     * Transforms a specific mime type into an HTMLElement.
+     * Transforms a specific mime type into an HTMLElement. Uses the fallback
+     * renderer if unable to get find the right one.
      * @param  {any}    data     Raw data
      * @param  {string} mimetype MIME type (e.g. text/html, image/png)
      * @return {Promise<HTMLElement>}
      */
     transform(data, mimetype, doc) {
-        let renderer = this.get_renderer(mimetype);
+        let renderer = this.getRenderer(mimetype);
+        // TODO: Handle the fallbackRenderer case
         if (renderer) {
             // Don't assume the transformation will return a promise.  Also
             // don't assume the transformation will succeed.
@@ -92,7 +94,7 @@ export class Transformime {
      * @param  string mimetype the data type (e.g. text/plain, text/html, image/png)
      * @return {RendererBase} Matching renderer
      */
-    get_renderer(mimetype) {
+    getRenderer(mimetype) {
         for (let renderer of this.renderers) {
             if (mimetype === renderer.mimetype) {
                 return renderer;
