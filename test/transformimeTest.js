@@ -23,6 +23,9 @@ class DummyRenderer{
 
     transform(data, doc) {
         let pre = doc.createElement('pre');
+
+        this.lastData = data;
+        this.lastDoc = doc;
         pre.textContent = data;
         return pre;
     }
@@ -63,7 +66,7 @@ describe('Transformime', function() {
         it('should have called our DummyRender', function() {
             var elPromise = this.t.transform("dummy-data", "transformime/dummy1", this.document);
 
-            elPromise.then((el) => {
+            return elPromise.then((el) => {
                 assert.equal(this.dummyRenderer1.lastData, "dummy-data");
                 assert.equal(this.dummyRenderer1.lastDoc, this.document);
 
@@ -76,9 +79,8 @@ describe('Transformime', function() {
         it('should fail when the mimetype is not known', function() {
             let elPromise = this.t.transform("my-data", "transformime/unknown", this.doc);
 
-            elPromise.catch((err) => {
+            return elPromise.catch((err) => {
                 assert.equal(err, 'Renderer for mimetype transformime/unknown not found.');
-                done();
             });
         });
     });
@@ -93,19 +95,18 @@ describe('Transformime', function() {
     });
     describe('transformRichest', function() {
         describe('should only render the "richest" of the renderers', function() {
-            it('when called with a all mimetypes in the mimebundle, only return lastmost', function() {
+            it('when called with all mimetypes in the mimebundle, only return lastmost', function() {
                 let mimeBundle = {
                     'transformime/dummy1': 'dummy data 1',
                     'transformime/dummy2': 'dummy data 2',
                     'transformime/dummy3': 'dummy data 3'
                 };
 
-                let elPromise = this.t.transformRichest(mimeBundle, this.document);
-                elPromise.then( () => {
+                var elPromise = this.t.transformRichest(mimeBundle, this.document);
+                return elPromise.then( () => {
                     assert.isUndefined(this.dummyRenderer1.lastData);
                     assert.isUndefined(this.dummyRenderer2.lastData);
                     assert.equal(this.dummyRenderer3.lastData, "dummy data 3");
-                    done();
                 });
 
             });
@@ -116,11 +117,10 @@ describe('Transformime', function() {
                 };
 
                 let elPromise = this.t.transformRichest(mimeBundle, this.document);
-                elPromise.then( () => {
+                return elPromise.then( () => {
                     assert.isUndefined(this.dummyRenderer1.lastData);
                     assert.equal(this.dummyRenderer2.lastData, "dummy data 2");
                     assert.isUndefined(this.dummyRenderer3.lastData);
-                    done();
                 });
             });
             it('when called with mimetypes it doesn\'t know, it uses supported mimetypes', function() {
@@ -133,11 +133,10 @@ describe('Transformime', function() {
                 };
 
                 let elPromise = this.t.transformRichest(mimeBundle, this.document);
-                elPromise.then( () => {
+                return elPromise.then( () => {
                     assert.equal(this.dummyRenderer1.lastData, "dummy data 1");
                     assert.isUndefined(this.dummyRenderer2.lastData);
                     assert.isUndefined(this.dummyRenderer3.lastData);
-                    done();
                 });
             });
             it('when called with no supported mimetypes, it uses the fallbackRenderer', function(){
@@ -149,9 +148,8 @@ describe('Transformime', function() {
                 this.t.fallbackRenderer = new DummyRenderer("fallback/test");
                 let elPromise = this.t.transformRichest(mimeBundle, this.document);
 
-                elPromise.then( () => {
+                return elPromise.then( () => {
                     assert.equal(this.t.fallbackRenderer.lastData, 'omg this is going to fail');
-                    done();
                 });
             });
         });
