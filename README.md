@@ -26,20 +26,20 @@ Transformime works in the browser (via browserify) and with jsdom!
 > var document = jsdom.jsdom() // could use window.document
 > var Transformime = require('transformime').Transformime;
 > var transformer = new Transformime();
-> var el = transformer.transform("<h1>Woo</h1>", "text/html", document)
-> el.innerHTML
-'<h1>Woo</h1>'
-> el.textContent
-'Woo'
+> p1.then(function(el){ console.log(el.innerHTML); console.log(el.textContent)});
+<h1>Woo</h1>
+Woo'
 ```
 
 Images get handled as base64 encoded data and become embedded elements.
 
 ```javascript
 > // Send an image over
-> el = transformer.transform("R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7", "image/png", document)
-> el.src
-'data:image/png;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7'
+> p2 = transformer.transform("R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7", "image/png", document)
+> p2.then(function(el){
+...     console.log(el.src);
+... })
+data:image/png;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7
 ```
 
 ### Working with iframes
@@ -50,8 +50,10 @@ Images get handled as base64 encoded data and become embedded elements.
 > var iframe = document.createElement("iframe");
 > document.querySelector('body').appendChild(iframe);
 > var idoc = iframe.contentDocument;
-> var el = transformer.transform('<h1>mimetic</h1>', "text/html", idoc);
-> idoc.querySelector('body').appendChild(el);
+> var p3 = transformer.transform('<h1>mimetic</h1>', "text/html", idoc);
+> p3.then(function(el){
+... idoc.querySelector('body').appendChild(el);
+... })
 > idoc.querySelector('body').innerHTML
 '<div><h1>mimetic</h1></div>'
 ```
