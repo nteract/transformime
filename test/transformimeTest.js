@@ -1,18 +1,15 @@
-import {assert, expect} from 'chai';
+import {assert} from 'chai';
 
 var jsdom = require('jsdom');
 
 import {Transformime} from '../src/transformime';
 import {DefaultRenderer} from '../src/defaultrenderer';
 
-import {RendererBase} from '../src/rendererbase';
-
 /**
  * Dummy Renderer for spying on
  */
-class DummyRenderer extends RendererBase {
+class DummyRenderer{
     constructor(mimetype) {
-        super();
         this._mimetype = mimetype;
     }
 
