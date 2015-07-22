@@ -8,7 +8,7 @@ import {HTMLRenderer} from './htmlrenderer';
 /**
  * Transforms mimetypes into HTMLElements
  */
-export class Transformime {
+export default class Transformime {
 
     /**
      * Public constructor
