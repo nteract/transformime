@@ -12,7 +12,7 @@ export class Transformime {
 
     /**
      * Public constructor
-     * @param  {RendererBase[]} renderers       list of renderers, in reverse
+     * @param  {TransformerBase[]} renderers       list of renderers, in reverse
      *                                          priority order
      * @param  {RendererBase} fallbackRenderer  renderer to default to when a
      *                                          mimetype is unsupported

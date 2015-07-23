@@ -1,8 +1,8 @@
 "use strict";
 
-import {RendererBase} from './rendererbase';
+import {TransformerBase} from './rendererbase';
 
-export class HTMLRenderer extends RendererBase {
+export class HTMLRenderer extends TransformerBase {
     get mimetype() {
         return 'text/html';
     }

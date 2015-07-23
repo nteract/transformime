@@ -1,11 +1,11 @@
 "use strict";
 
-import {RendererBase} from './rendererbase';
+import {TransformerBase} from './rendererbase';
 
 /**
  * Converts b64 image mimetypes to img elements.
  */
-export class ImageRenderer extends RendererBase {
+export class ImageRenderer extends TransformerBase {
     constructor(mimetype) {
         super();
         this._mimetype = mimetype;
