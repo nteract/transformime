@@ -1,6 +1,6 @@
 "use strict";
 
-import {TransformerBase} from './rendererbase';
+import {TransformerBase} from './transformerbase';
 
 export class HTMLTransformer extends TransformerBase {
     get mimetype() {

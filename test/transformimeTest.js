@@ -3,7 +3,7 @@ import {assert} from 'chai';
 import {jsdom} from 'jsdom';
 
 import {Transformime} from '../src/transformime';
-import {DefaultTransformer} from '../src/defaultrenderer';
+import {DefaultTransformer} from '../src/defaulttransformer';
 
 /**
  * Dummy Transformer for spying on
@@ -40,8 +40,8 @@ describe('Transformime defaults', function() {
         before(function(){
             this.t = new Transformime();
         });
-        it('should have default renderers', function() {
-            assert(Array.isArray(this.t.renderers));
+        it('should have default transformers', function() {
+            assert(Array.isArray(this.t.transformers));
         });
         it('should have the DefaultTransformer as the fallbackTransformer', function() {
             assert(this.t.fallbackTransformer instanceof DefaultTransformer);
@@ -54,12 +54,12 @@ describe('Transformime', function() {
         this.dummyTransformer1 = new DummyTransformer("transformime/dummy1");
         this.dummyTransformer2 = new DummyTransformer("transformime/dummy2");
         this.dummyTransformer3 = new DummyTransformer("transformime/dummy3");
-        this.renderers = [
+        this.transformers = [
             this.dummyTransformer1,
             this.dummyTransformer2,
             this.dummyTransformer3
         ];
-        this.t = new Transformime(this.renderers);
+        this.t = new Transformime(this.transformers);
         this.document = jsdom();
     });
     describe('transform', function() {
@@ -85,16 +85,16 @@ describe('Transformime', function() {
         });
     });
     describe('getTransformer', function() {
-        it('should get the right renderer for a given mimetype', function() {
-            let renderer = this.t.getTransformer('transformime/dummy1');
-            assert.equal(this.dummyTransformer1, renderer);
+        it('should get the right transformer for a given mimetype', function() {
+            let transformer = this.t.getTransformer('transformime/dummy1');
+            assert.equal(this.dummyTransformer1, transformer);
         });
         it('should return null with an unknown mimetype', function() {
-            assert.isNull(this.t.getTransformer('cats/calico'), 'found a renderer when I shouldn\'t have');
+            assert.isNull(this.t.getTransformer('cats/calico'), 'found a transformer when I shouldn\'t have');
         });
     });
     describe('transformRichest', function() {
-        describe('should only render the "richest" of the renderers', function() {
+        describe('should only render the "richest" of the transformers', function() {
             it('when called with all mimetypes in the mimebundle, only return lastmost', function() {
                 let mimeBundle = {
                     'transformime/dummy1': 'dummy data 1',

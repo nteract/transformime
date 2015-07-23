@@ -1,6 +1,6 @@
 "use strict";
 
-import {TransformerBase} from './rendererbase';
+import {TransformerBase} from './transformerbase';
 
 /**
  * Converts b64 image mimetypes to img elements.

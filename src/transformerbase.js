@@ -16,7 +16,7 @@ export class TransformerBase {
 
     /**
      * Turns a data type into an HTML Element on a document
-     * @param  {any} data           Data this renderer expects
+     * @param  {any} data           Data this transformer expects
      * @param  {Document} document  A DOM (window.document, JSDom, iframe.contentDocument)
      * @return {HTMLElement}        Representation of [data] as an HTMLElement
      */

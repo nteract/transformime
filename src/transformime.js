@@ -1,9 +1,9 @@
 "use strict";
 
-import {TextTransformer} from './textrenderer';
-import {DefaultTransformer} from './defaultrenderer';
-import {ImageTransformer} from './imagerenderer';
-import {HTMLTransformer} from './htmlrenderer';
+import {TextTransformer} from './texttransformer';
+import {DefaultTransformer} from './defaulttransformer';
+import {ImageTransformer} from './imagetransformer';
+import {HTMLTransformer} from './htmltransformer';
 
 /**
  * Transforms mimetypes into HTMLElements
@@ -12,15 +12,15 @@ export class Transformime {
 
     /**
      * Public constructor
-     * @param  {TransformerBase[]} renderers       list of renderers, in reverse
+     * @param  {TransformerBase[]} transformers       list of transformers, in reverse
      *                                          priority order
-     * @param  {TransformerBase} fallbackTransformer  renderer to default to when a
+     * @param  {TransformerBase} fallbackTransformer  transformer to default to when a
      *                                          mimetype is unsupported
      */
-    constructor(renderers, fallbackTransformer) {
+    constructor(transformers, fallbackTransformer) {
 
         // Initialize instance variables.
-        this.renderers = renderers || [
+        this.transformers = transformers || [
             new TextTransformer(),
             new ImageTransformer('image/png'),
             new ImageTransformer('image/jpeg'),
@@ -31,7 +31,7 @@ export class Transformime {
 
     /**
      * Transforms a mime bundle, using the richest available representation,
-     * into an HTMLElement. Uses fallback renderer otherwise.
+     * into an HTMLElement. Uses fallback transformer otherwise.
      * @param  {any}      bundle {mimetype1: data1, mimetype2: data2, ...}
      * @param  {Document} doc    Any of window.document, iframe.contentDocument
      * @return {Promise<HTMLElement>}
@@ -40,10 +40,10 @@ export class Transformime {
         let element;
         let richTransformer = this.fallbackTransformer;
 
-        // Choose the last renderer as the most rich
-        for (let renderer of this.renderers) {
-            if (renderer.mimetype in bundle) {
-                richTransformer = renderer;
+        // Choose the last transformer as the most rich
+        for (let transformer of this.transformers) {
+            if (transformer.mimetype in bundle) {
+                richTransformer = transformer;
             }
         }
 
@@ -68,19 +68,19 @@ export class Transformime {
 
     /**
      * Transforms a specific mime type into an HTMLElement. Uses the fallback
-     * renderer if unable to get find the right one.
+     * transformer if unable to get find the right one.
      * @param  {any}    data     Raw data
      * @param  {string} mimetype MIME type (e.g. text/html, image/png)
      * @return {Promise<HTMLElement>}
      */
     transform(data, mimetype, doc) {
-        let renderer = this.getTransformer(mimetype);
+        let transformer = this.getTransformer(mimetype);
         // TODO: Handle the fallbackTransformer case
-        if (renderer) {
+        if (transformer) {
             // Don't assume the transformation will return a promise.  Also
             // don't assume the transformation will succeed.
             try {
-                return Promise.resolve(renderer.transform(data, doc || document));
+                return Promise.resolve(transformer.transform(data, doc || document));
             } catch (e) {
                 return Promise.reject(e);
             }
@@ -90,14 +90,14 @@ export class Transformime {
     }
 
     /**
-     * Gets a renderer matching the mimetype
+     * Gets a transformer matching the mimetype
      * @param  string mimetype the data type (e.g. text/plain, text/html, image/png)
-     * @return {TransformerBase} Matching renderer
+     * @return {TransformerBase} Matching transformer
      */
     getTransformer(mimetype) {
-        for (let renderer of this.renderers) {
-            if (mimetype === renderer.mimetype) {
-                return renderer;
+        for (let transformer of this.transformers) {
+            if (mimetype === transformer.mimetype) {
+                return transformer;
             }
         }
         return null;
