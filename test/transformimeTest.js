@@ -3,12 +3,12 @@ import {assert} from 'chai';
 import {jsdom} from 'jsdom';
 
 import {Transformime} from '../src/transformime';
-import {DefaultRenderer} from '../src/defaultrenderer';
+import {DefaultTransformer} from '../src/defaultrenderer';
 
 /**
- * Dummy Renderer for spying on
+ * Dummy Transformer for spying on
  */
-class DummyRenderer{
+class DummyTransformer{
     constructor(mimetype) {
         this._mimetype = mimetype;
     }
@@ -43,21 +43,21 @@ describe('Transformime defaults', function() {
         it('should have default renderers', function() {
             assert(Array.isArray(this.t.renderers));
         });
-        it('should have the DefaultRenderer as the fallbackRenderer', function() {
-            assert(this.t.fallbackRenderer instanceof DefaultRenderer);
+        it('should have the DefaultTransformer as the fallbackTransformer', function() {
+            assert(this.t.fallbackTransformer instanceof DefaultTransformer);
         });
     });
 });
 
 describe('Transformime', function() {
     beforeEach(function() {
-        this.dummyRenderer1 = new DummyRenderer("transformime/dummy1");
-        this.dummyRenderer2 = new DummyRenderer("transformime/dummy2");
-        this.dummyRenderer3 = new DummyRenderer("transformime/dummy3");
+        this.dummyTransformer1 = new DummyTransformer("transformime/dummy1");
+        this.dummyTransformer2 = new DummyTransformer("transformime/dummy2");
+        this.dummyTransformer3 = new DummyTransformer("transformime/dummy3");
         this.renderers = [
-            this.dummyRenderer1,
-            this.dummyRenderer2,
-            this.dummyRenderer3
+            this.dummyTransformer1,
+            this.dummyTransformer2,
+            this.dummyTransformer3
         ];
         this.t = new Transformime(this.renderers);
         this.document = jsdom();
@@ -67,8 +67,8 @@ describe('Transformime', function() {
             var elPromise = this.t.transform("dummy-data", "transformime/dummy1", this.document);
 
             return elPromise.then((el) => {
-                assert.equal(this.dummyRenderer1.lastData, "dummy-data");
-                assert.equal(this.dummyRenderer1.lastDoc, this.document);
+                assert.equal(this.dummyTransformer1.lastData, "dummy-data");
+                assert.equal(this.dummyTransformer1.lastDoc, this.document);
 
                 // el should be an HTMLElement, which only exists in jsdom or on a
                 // real document.
@@ -80,17 +80,17 @@ describe('Transformime', function() {
             let elPromise = this.t.transform("my-data", "transformime/unknown", this.doc);
 
             return elPromise.catch((err) => {
-                assert.equal(err.message, 'Renderer for mimetype transformime/unknown not found.');
+                assert.equal(err.message, 'Transformer for mimetype transformime/unknown not found.');
             });
         });
     });
-    describe('getRenderer', function() {
+    describe('getTransformer', function() {
         it('should get the right renderer for a given mimetype', function() {
-            let renderer = this.t.getRenderer('transformime/dummy1');
-            assert.equal(this.dummyRenderer1, renderer);
+            let renderer = this.t.getTransformer('transformime/dummy1');
+            assert.equal(this.dummyTransformer1, renderer);
         });
         it('should return null with an unknown mimetype', function() {
-            assert.isNull(this.t.getRenderer('cats/calico'), 'found a renderer when I shouldn\'t have');
+            assert.isNull(this.t.getTransformer('cats/calico'), 'found a renderer when I shouldn\'t have');
         });
     });
     describe('transformRichest', function() {
@@ -104,9 +104,9 @@ describe('Transformime', function() {
 
                 var elPromise = this.t.transformRichest(mimeBundle, this.document);
                 return elPromise.then( () => {
-                    assert.isUndefined(this.dummyRenderer1.lastData);
-                    assert.isUndefined(this.dummyRenderer2.lastData);
-                    assert.equal(this.dummyRenderer3.lastData, "dummy data 3");
+                    assert.isUndefined(this.dummyTransformer1.lastData);
+                    assert.isUndefined(this.dummyTransformer2.lastData);
+                    assert.equal(this.dummyTransformer3.lastData, "dummy data 3");
                 });
 
             });
@@ -118,9 +118,9 @@ describe('Transformime', function() {
 
                 let elPromise = this.t.transformRichest(mimeBundle, this.document);
                 return elPromise.then( () => {
-                    assert.isUndefined(this.dummyRenderer1.lastData);
-                    assert.equal(this.dummyRenderer2.lastData, "dummy data 2");
-                    assert.isUndefined(this.dummyRenderer3.lastData);
+                    assert.isUndefined(this.dummyTransformer1.lastData);
+                    assert.equal(this.dummyTransformer2.lastData, "dummy data 2");
+                    assert.isUndefined(this.dummyTransformer3.lastData);
                 });
             });
             it('when called with mimetypes it doesn\'t know, it uses supported mimetypes', function() {
@@ -134,23 +134,23 @@ describe('Transformime', function() {
 
                 let elPromise = this.t.transformRichest(mimeBundle, this.document);
                 return elPromise.then( () => {
-                    assert.equal(this.dummyRenderer1.lastData, "dummy data 1");
-                    assert.isUndefined(this.dummyRenderer2.lastData);
-                    assert.isUndefined(this.dummyRenderer3.lastData);
+                    assert.equal(this.dummyTransformer1.lastData, "dummy data 1");
+                    assert.isUndefined(this.dummyTransformer2.lastData);
+                    assert.isUndefined(this.dummyTransformer3.lastData);
                 });
             });
-            it.skip('when called with no supported mimetypes, it uses the fallbackRenderer', function(){
+            it.skip('when called with no supported mimetypes, it uses the fallbackTransformer', function(){
                 let mimeBundle = {
                     'video/quicktime': 'cat vid',
                     'application/zip': 'zippy'
                 };
 
-                this.t.fallbackRenderer = new DummyRenderer("fallback/test");
-                //TODO: Fix/determine the fallbackRenderer case
+                this.t.fallbackTransformer = new DummyTransformer("fallback/test");
+                //TODO: Fix/determine the fallbackTransformer case
 
                 let elPromise = this.t.transformRichest(mimeBundle, this.document);
                 return elPromise.then( () => {
-                    assert.equal(this.t.fallbackRenderer.lastData, '');
+                    assert.equal(this.t.fallbackTransformer.lastData, '');
                 });
             });
         });

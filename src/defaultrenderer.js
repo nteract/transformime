@@ -2,7 +2,7 @@
 
 import {TransformerBase} from './rendererbase';
 
-export class DefaultRenderer extends TransformerBase {
+export class DefaultTransformer extends TransformerBase {
     get mimetype() {
         return 'unknown';
     }

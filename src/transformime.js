@@ -1,9 +1,9 @@
 "use strict";
 
-import {TextRenderer} from './textrenderer';
-import {DefaultRenderer} from './defaultrenderer';
-import {ImageRenderer} from './imagerenderer';
-import {HTMLRenderer} from './htmlrenderer';
+import {TextTransformer} from './textrenderer';
+import {DefaultTransformer} from './defaultrenderer';
+import {ImageTransformer} from './imagerenderer';
+import {HTMLTransformer} from './htmlrenderer';
 
 /**
  * Transforms mimetypes into HTMLElements
@@ -14,19 +14,19 @@ export class Transformime {
      * Public constructor
      * @param  {TransformerBase[]} renderers       list of renderers, in reverse
      *                                          priority order
-     * @param  {RendererBase} fallbackRenderer  renderer to default to when a
+     * @param  {TransformerBase} fallbackTransformer  renderer to default to when a
      *                                          mimetype is unsupported
      */
-    constructor(renderers, fallbackRenderer) {
+    constructor(renderers, fallbackTransformer) {
 
         // Initialize instance variables.
         this.renderers = renderers || [
-            new TextRenderer(),
-            new ImageRenderer('image/png'),
-            new ImageRenderer('image/jpeg'),
-            new HTMLRenderer()
+            new TextTransformer(),
+            new ImageTransformer('image/png'),
+            new ImageTransformer('image/jpeg'),
+            new HTMLTransformer()
         ];
-        this.fallbackRenderer = fallbackRenderer || new DefaultRenderer();
+        this.fallbackTransformer = fallbackTransformer || new DefaultTransformer();
     }
 
     /**
@@ -38,21 +38,21 @@ export class Transformime {
      */
     transformRichest(bundle, doc) {
         let element;
-        let richRenderer = this.fallbackRenderer;
+        let richTransformer = this.fallbackTransformer;
 
         // Choose the last renderer as the most rich
         for (let renderer of this.renderers) {
             if (renderer.mimetype in bundle) {
-                richRenderer = renderer;
+                richTransformer = renderer;
             }
         }
 
-        if (richRenderer){
-            let data = bundle[richRenderer.mimetype];
-            return this.transform(data, richRenderer.mimetype, doc);
+        if (richTransformer){
+            let data = bundle[richTransformer.mimetype];
+            return this.transform(data, richTransformer.mimetype, doc);
         }
 
-        return Promise.reject(new Error('Renderer(s) for ' + Object.keys(bundle).join(', ') + ' not found.'));
+        return Promise.reject(new Error('Transformer(s) for ' + Object.keys(bundle).join(', ') + ' not found.'));
     }
 
     /**
@@ -74,8 +74,8 @@ export class Transformime {
      * @return {Promise<HTMLElement>}
      */
     transform(data, mimetype, doc) {
-        let renderer = this.getRenderer(mimetype);
-        // TODO: Handle the fallbackRenderer case
+        let renderer = this.getTransformer(mimetype);
+        // TODO: Handle the fallbackTransformer case
         if (renderer) {
             // Don't assume the transformation will return a promise.  Also
             // don't assume the transformation will succeed.
@@ -86,15 +86,15 @@ export class Transformime {
             }
         }
 
-        return Promise.reject(new Error('Renderer for mimetype ' + mimetype + ' not found.'));
+        return Promise.reject(new Error('Transformer for mimetype ' + mimetype + ' not found.'));
     }
 
     /**
      * Gets a renderer matching the mimetype
      * @param  string mimetype the data type (e.g. text/plain, text/html, image/png)
-     * @return {RendererBase} Matching renderer
+     * @return {TransformerBase} Matching renderer
      */
-    getRenderer(mimetype) {
+    getTransformer(mimetype) {
         for (let renderer of this.renderers) {
             if (mimetype === renderer.mimetype) {
                 return renderer;

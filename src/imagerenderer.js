@@ -5,7 +5,7 @@ import {TransformerBase} from './rendererbase';
 /**
  * Converts b64 image mimetypes to img elements.
  */
-export class ImageRenderer extends TransformerBase {
+export class ImageTransformer extends TransformerBase {
     constructor(mimetype) {
         super();
         this._mimetype = mimetype;

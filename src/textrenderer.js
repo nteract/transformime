@@ -2,7 +2,7 @@
 
 import {TransformerBase} from './rendererbase';
 
-export class TextRenderer extends TransformerBase {
+export class TextTransformer extends TransformerBase {
     get mimetype() {
         return 'text/plain';
     }

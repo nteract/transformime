@@ -2,7 +2,7 @@
 
 import {TransformerBase} from './rendererbase';
 
-export class HTMLRenderer extends TransformerBase {
+export class HTMLTransformer extends TransformerBase {
     get mimetype() {
         return 'text/html';
     }
