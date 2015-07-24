@@ -28,6 +28,7 @@ It returns promises for all the HTMLElements.
 > // For browsers, they can pass document around (or an iframe's contentDocument)
 > var Transformime = require('transformime').Transformime;
 > var transformer = new Transformime();
+> var p1 = transformer.transform("<h1>Woo</h1>", "text/html", document);
 > p1.then(function(el){
 ...   console.log(el.innerHTML);
 ...   console.log(el.textContent)
