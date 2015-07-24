@@ -26,6 +26,7 @@ describe('image transformer', function() {
             assert.equal(el.innerHTML, "");
 
             var imt2 = new ImageTransformer('image/gif');
+            imageData = "R0lGODlhAQABAIAAAP///wAAACwAAAAAAQABAAACAkQBADs=";
             var el2 = imt2.transform(imageData, this.document);
             assert.equal(el2.src, "data:image/gif;base64," + imageData);
             assert.equal(el2.localName, "img");
