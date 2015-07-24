@@ -1,9 +1,9 @@
 "use strict";
 
-import {TextRenderer} from './textrenderer';
-import {DefaultRenderer} from './defaultrenderer';
-import {ImageRenderer} from './imagerenderer';
-import {HTMLRenderer} from './htmlrenderer';
+import {TextTransformer} from './texttransformer';
+import {DefaultTransformer} from './defaulttransformer';
+import {ImageTransformer} from './imagetransformer';
+import {HTMLTransformer} from './htmltransformer';
 
 /**
  * Transforms mimetypes into HTMLElements
@@ -12,47 +12,47 @@ export class Transformime {
 
     /**
      * Public constructor
-     * @param  {RendererBase[]} renderers       list of renderers, in reverse
+     * @param  {TransformerBase[]} transformers       list of transformers, in reverse
      *                                          priority order
-     * @param  {RendererBase} fallbackRenderer  renderer to default to when a
+     * @param  {TransformerBase} fallbackTransformer  transformer to default to when a
      *                                          mimetype is unsupported
      */
-    constructor(renderers, fallbackRenderer) {
+    constructor(transformers, fallbackTransformer) {
 
         // Initialize instance variables.
-        this.renderers = renderers || [
-            new TextRenderer(),
-            new ImageRenderer('image/png'),
-            new ImageRenderer('image/jpeg'),
-            new HTMLRenderer()
+        this.transformers = transformers || [
+            new TextTransformer(),
+            new ImageTransformer('image/png'),
+            new ImageTransformer('image/jpeg'),
+            new HTMLTransformer()
         ];
-        this.fallbackRenderer = fallbackRenderer || new DefaultRenderer();
+        this.fallbackTransformer = fallbackTransformer || new DefaultTransformer();
     }
 
     /**
      * Transforms a mime bundle, using the richest available representation,
-     * into an HTMLElement. Uses fallback renderer otherwise.
+     * into an HTMLElement. Uses fallback transformer otherwise.
      * @param  {any}      bundle {mimetype1: data1, mimetype2: data2, ...}
      * @param  {Document} doc    Any of window.document, iframe.contentDocument
      * @return {Promise<HTMLElement>}
      */
     transformRichest(bundle, doc) {
         let element;
-        let richRenderer = this.fallbackRenderer;
+        let richTransformer = this.fallbackTransformer;
 
-        // Choose the last renderer as the most rich
-        for (let renderer of this.renderers) {
-            if (renderer.mimetype in bundle) {
-                richRenderer = renderer;
+        // Choose the last transformer as the most rich
+        for (let transformer of this.transformers) {
+            if (transformer.mimetype in bundle) {
+                richTransformer = transformer;
             }
         }
 
-        if (richRenderer){
-            let data = bundle[richRenderer.mimetype];
-            return this.transform(data, richRenderer.mimetype, doc);
+        if (richTransformer){
+            let data = bundle[richTransformer.mimetype];
+            return this.transform(data, richTransformer.mimetype, doc);
         }
 
-        return Promise.reject(new Error('Renderer(s) for ' + Object.keys(bundle).join(', ') + ' not found.'));
+        return Promise.reject(new Error('Transformer(s) for ' + Object.keys(bundle).join(', ') + ' not found.'));
     }
 
     /**
@@ -68,36 +68,36 @@ export class Transformime {
 
     /**
      * Transforms a specific mime type into an HTMLElement. Uses the fallback
-     * renderer if unable to get find the right one.
+     * transformer if unable to get find the right one.
      * @param  {any}    data     Raw data
      * @param  {string} mimetype MIME type (e.g. text/html, image/png)
      * @return {Promise<HTMLElement>}
      */
     transform(data, mimetype, doc) {
-        let renderer = this.getRenderer(mimetype);
-        // TODO: Handle the fallbackRenderer case
-        if (renderer) {
+        let transformer = this.getTransformer(mimetype);
+        // TODO: Handle the fallbackTransformer case
+        if (transformer) {
             // Don't assume the transformation will return a promise.  Also
             // don't assume the transformation will succeed.
             try {
-                return Promise.resolve(renderer.transform(data, doc || document));
+                return Promise.resolve(transformer.transform(data, doc || document));
             } catch (e) {
                 return Promise.reject(e);
             }
         }
 
-        return Promise.reject(new Error('Renderer for mimetype ' + mimetype + ' not found.'));
+        return Promise.reject(new Error('Transformer for mimetype ' + mimetype + ' not found.'));
     }
 
     /**
-     * Gets a renderer matching the mimetype
+     * Gets a transformer matching the mimetype
      * @param  string mimetype the data type (e.g. text/plain, text/html, image/png)
-     * @return {RendererBase} Matching renderer
+     * @return {TransformerBase} Matching transformer
      */
-    getRenderer(mimetype) {
-        for (let renderer of this.renderers) {
-            if (mimetype === renderer.mimetype) {
-                return renderer;
+    getTransformer(mimetype) {
+        for (let transformer of this.transformers) {
+            if (mimetype === transformer.mimetype) {
+                return transformer;
             }
         }
         return null;
