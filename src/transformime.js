@@ -49,8 +49,10 @@ class Transformime {
 
         if (richTransformer){
             let mimetype = richTransformer.mimetype;
-            let data = bundle[mimetype];
-            return {mimetype: this.transform(data, mimetype, doc)};
+            var prom = this.transform(bundle[mimetype], mimetype, doc);
+            return prom.then(el => {
+                return Promise.resolve({mimetype: el});
+            });
         }
 
         return Promise.reject(new Error('Transformer(s) for ' + Object.keys(bundle).join(', ') + ' not found.'));
@@ -65,7 +67,10 @@ class Transformime {
     transformAll(bundle, doc) {
         var mimetypes = Object.keys(bundle);
         var promises = mimetypes.map( mimetype => {
-            return {mimetype: this.transform(bundle[mimetype], mimetype, doc)};
+            var prom = this.transform(bundle[mimetype], mimetype, doc);
+            return prom.then(el => {
+                return Promise.resolve({mimetype: el});
+            });
         });
         return Promise.all(promises);
     }
