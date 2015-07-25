@@ -1,14 +1,14 @@
 "use strict";
 
-import {TextTransformer} from './texttransformer';
-import {DefaultTransformer} from './defaulttransformer';
-import {ImageTransformer} from './imagetransformer';
-import {HTMLTransformer} from './htmltransformer';
-
+import {TransformerBase} from './transformer-base';
+import {TextTransformer} from './text.transformer';
+import {DefaultTransformer} from './default.transformer';
+import {ImageTransformer} from './image.transformer';
+import {HTMLTransformer} from './html.transformer';
 /**
  * Transforms mimetypes into HTMLElements
  */
-export class Transformime {
+class Transformime {
 
     /**
      * Public constructor
@@ -104,3 +104,5 @@ export class Transformime {
         return null;
     }
 }
+
+export default {Transformime, TransformerBase, TextTransformer, DefaultTransformer, ImageTransformer, HTMLTransformer};
