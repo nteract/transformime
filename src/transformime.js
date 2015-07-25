@@ -62,7 +62,8 @@ export class Transformime {
      * @return {Promise<HTMLElement[]>}
      */
     transformAll(bundle, doc) {
-        var promises = bundle.map(function(mimetype) { return this.transformMimetype(bundle[mimetype], mimetype, doc); });
+        var mimetypes = Object.keys(bundle);
+        var promises = mimetypes.map( mimetype => { return this.transform(bundle[mimetype], mimetype, doc); });
         return Promise.all(promises);
     }
 
