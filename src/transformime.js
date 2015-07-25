@@ -4,11 +4,10 @@ import {TextTransformer} from './text.transformer';
 import {DefaultTransformer} from './default.transformer';
 import {ImageTransformer} from './image.transformer';
 import {HTMLTransformer} from './html.transformer';
-
 /**
  * Transforms mimetypes into HTMLElements
  */
-export class Transformime {
+class Transformime {
 
     /**
      * Public constructor
@@ -104,3 +103,5 @@ export class Transformime {
         return null;
     }
 }
+
+export default {Transformime, TextTransformer, DefaultTransformer, ImageTransformer, HTMLTransformer};

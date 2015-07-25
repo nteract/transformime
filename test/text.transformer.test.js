@@ -2,7 +2,7 @@ import {assert} from 'chai';
 
 import {jsdom} from 'jsdom';
 
-import {TextTransformer} from '../src/text.transformer';
+import {TextTransformer} from '../src/transformime';
 
 describe('text transformer', function() {
     beforeEach(function() {

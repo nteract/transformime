@@ -2,7 +2,7 @@ import {assert} from 'chai';
 
 import {jsdom} from 'jsdom';
 
-import {TransformerBase} from '../src/transformer-base';
+import {TransformerBase} from '../src/transformime';
 
 describe('transformer base', function() {
     beforeEach(function() {

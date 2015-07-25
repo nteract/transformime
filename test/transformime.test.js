@@ -3,7 +3,7 @@ import {assert} from 'chai';
 import {jsdom} from 'jsdom';
 
 import {Transformime} from '../src/transformime';
-import {DefaultTransformer} from '../src/default.transformer';
+import {DefaultTransformer} from '../src/transformime';
 
 /**
  * Dummy Transformer for spying on
