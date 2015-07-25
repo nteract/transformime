@@ -2,7 +2,7 @@ import {assert} from 'chai';
 
 import {jsdom} from 'jsdom';
 
-import {ImageTransformer} from '../src/imagetransformer';
+import {ImageTransformer} from '../src/image.transformer';
 
 describe('image transformer', function() {
     beforeEach(function() {

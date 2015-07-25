@@ -1,9 +1,9 @@
 "use strict";
 
-import {TextTransformer} from './texttransformer';
-import {DefaultTransformer} from './defaulttransformer';
-import {ImageTransformer} from './imagetransformer';
-import {HTMLTransformer} from './htmltransformer';
+import {TextTransformer} from './text.transformer';
+import {DefaultTransformer} from './default.transformer';
+import {ImageTransformer} from './image.transformer';
+import {HTMLTransformer} from './html.transformer';
 
 /**
  * Transforms mimetypes into HTMLElements

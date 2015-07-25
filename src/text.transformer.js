@@ -1,6 +1,6 @@
 "use strict";
 
-import {TransformerBase} from './transformerbase';
+import {TransformerBase} from './transformer-base';
 
 export class TextTransformer extends TransformerBase {
     get mimetype() {
