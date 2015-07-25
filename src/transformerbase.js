@@ -21,6 +21,6 @@ export class TransformerBase {
      * @return {HTMLElement}        Representation of [data] as an HTMLElement
      */
     transform(data, document) {
-        throw new Error('render not implemented');
+        throw new Error('transform not implemented');
     }
 }
