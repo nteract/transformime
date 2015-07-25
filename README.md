@@ -20,7 +20,7 @@ Transformime works in the browser (via browserify) and with jsdom!
 
 It returns promises for all the HTMLElements.
 
-### Simple usage
+### Transform a single mimetype
 
 ```javascript
 > // In node we'll need a DOM to work with
@@ -48,6 +48,25 @@ Images get handled as base64 encoded data and become embedded elements.
 data:image/png;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7
 ```
 
+### Transform the richest element
+```javascript
+> var mimes = {'text/html': "<code>import this</code>", 'text/plain': "import this"}
+> var p3 = transformer.transformRichest(mimes, document);
+> p3.then(function(el){
+...    console.log(el.innerHTML)
+... })
+<code>import this</code>
+```
+
+### Transform all elements
+```javascript
+> var mimes = {'text/html': "<code>import this</code>", 'text/plain': "import this"}
+> var p4 = transformer.transformAll(mimes, document);
+> p4.then(function(els) { els.map(innerHTMLLog) })
+<code>import this</code>
+import this
+```
+
 ### Working with iframes
 
 ```javascript
@@ -56,8 +75,8 @@ data:image/png;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7
 > var iframe = document.createElement("iframe");
 > document.querySelector('body').appendChild(iframe);
 > var idoc = iframe.contentDocument;
-> var p3 = transformer.transform('<h1>mimetic</h1>', "text/html", idoc);
-> p3.then(function(el){
+> var p5 = transformer.transform('<h1>mimetic</h1>', "text/html", idoc);
+> p5.then(function(el){
 ... idoc.querySelector('body').appendChild(el);
 ... })
 > idoc.querySelector('body').innerHTML
