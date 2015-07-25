@@ -62,7 +62,7 @@ describe('Transformime', function() {
         this.t = new Transformime(this.transformers);
         this.document = jsdom();
     });
-    describe('transform', function() {
+    describe('#transform', function() {
         it('should have called our DummyRender', function() {
             var elPromise = this.t.transform("dummy-data", "transformime/dummy1", this.document);
 
@@ -84,7 +84,7 @@ describe('Transformime', function() {
             });
         });
     });
-    describe('getTransformer', function() {
+    describe('#getTransformer', function() {
         it('should get the right transformer for a given mimetype', function() {
             let transformer = this.t.getTransformer('transformime/dummy1');
             assert.equal(this.dummyTransformer1, transformer);
@@ -93,7 +93,7 @@ describe('Transformime', function() {
             assert.isNull(this.t.getTransformer('cats/calico'), 'found a transformer when I shouldn\'t have');
         });
     });
-    describe('transformRichest', function() {
+    describe('#transformRichest', function() {
         describe('should only render the "richest" of the transformers', function() {
             it('when called with all mimetypes in the mimebundle, only return lastmost', function() {
                 let mimeBundle = {
@@ -153,6 +153,23 @@ describe('Transformime', function() {
                     assert.equal(this.t.fallbackTransformer.lastData, '');
                 });
             });
+        });
+    });
+    describe("#transformAll", function() {
+        it('should return all available representations with a mimebundle', function() {
+            let mimeBundle = {
+                'transformime/dummy1': 'dummy data 1',
+                'transformime/dummy2': 'dummy data 2',
+                'transformime/dummy3': 'dummy data 3'
+            };
+
+            var elPromise = this.t.transformAll(mimeBundle, this.document);
+            return elPromise.then( () => {
+                assert.equal(this.dummyTransformer1.lastData, "dummy data 1");
+                assert.equal(this.dummyTransformer2.lastData, "dummy data 2");
+                assert.equal(this.dummyTransformer3.lastData, "dummy data 3");
+            });
+
         });
     });
 });
