@@ -52,19 +52,23 @@ data:image/png;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7
 ```javascript
 > var mimes = {'text/html': "<code>import this</code>", 'text/plain': "import this"}
 > var p3 = transformer.transformRichest(mimes, document);
-> p3.then(function(el){
-...    console.log(el.innerHTML)
+> p3.then(function(bundle){
+...    console.log(bundle.mimetype + ": " + bundle.el.innerHTML)
 ... })
-<code>import this</code>
+text/html: <code>import this</code>
 ```
 
 ### Transform all elements
 ```javascript
 > var mimes = {'text/html': "<code>import this</code>", 'text/plain': "import this"}
 > var p4 = transformer.transformAll(mimes, document);
-> p4.then(function(els) { els.map(innerHTMLLog) })
-<code>import this</code>
-import this
+> p4.then(function(arr) {
+...   arr.forEach(function(bundle) {
+...     console.log(bundle.mimetype + ": " + bundle.el.innerHTML);
+...   });
+... });
+text/html: <code>import this</code>
+text/plain: import this
 ```
 
 ### Working with iframes
