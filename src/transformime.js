@@ -34,7 +34,7 @@ class Transformime {
      * into an HTMLElement. Uses fallback transformer otherwise.
      * @param  {any}      bundle {mimetype1: data1, mimetype2: data2, ...}
      * @param  {Document} doc    Any of window.document, iframe.contentDocument
-     * @return {Promise<HTMLElement>}
+     * @return {Promise<Object>}
      */
     transformRichest(bundle, doc) {
         let element;
@@ -55,6 +55,16 @@ class Transformime {
         return Promise.reject(new Error('Transformer(s) for ' + Object.keys(bundle).join(', ') + ' not found.'));
     }
 
+    /**
+     * transformRetainMimetype is just like transform except it returns an
+     * object with both the mimetype and the element
+     * {"mimetype": mimetype, "el": el}
+     *
+     * @param  {any} data        Raw data
+     * @param  {string} mimetype Standard Mime type for the data
+     * @param  {Document} doc    The DOM to own the element
+     * @return {Object}          {"mimetype": mimetype, "el": el}
+     */
     transformRetainMimetype(data, mimetype, doc) {
         var prom = this.transform(data, mimetype, doc);
         return prom.then(el => {
@@ -69,7 +79,7 @@ class Transformime {
      * Transforms all of the mime types in a mime bundle into HTMLElements.
      * @param  {any}      bundle {mimetype1: data1, mimetype2: data2, ...}
      * @param  {Document} doc    Any of window.document, iframe.contentDocument
-     * @return {Promise<HTMLElement[]>}
+     * @return {Promise<Object[]>}
      */
     transformAll(bundle, doc) {
         var mimetypes = Object.keys(bundle);
@@ -80,8 +90,7 @@ class Transformime {
     }
 
     /**
-     * Transforms a specific mime type into an HTMLElement. Uses the fallback
-     * transformer if unable to get find the right one.
+     * Transforms a specific mime type into an HTMLElement.
      * @param  {any}    data     Raw data
      * @param  {string} mimetype MIME type (e.g. text/html, image/png)
      * @return {Promise<HTMLElement>}
