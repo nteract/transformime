@@ -43,9 +43,6 @@ describe('Transformime defaults', function() {
         it('should have default transformers', function() {
             assert(Array.isArray(this.t.transformers));
         });
-        it('should have the DefaultTransformer as the fallbackTransformer', function() {
-            assert(this.t.fallbackTransformer instanceof DefaultTransformer);
-        });
     });
 });
 
@@ -89,8 +86,8 @@ describe('Transformime', function() {
             let transformer = this.t.getTransformer('transformime/dummy1');
             assert.equal(this.dummyTransformer1, transformer);
         });
-        it('should return null with an unknown mimetype', function() {
-            assert.isNull(this.t.getTransformer('cats/calico'), 'found a transformer when I shouldn\'t have');
+        it('should return undefined with an unknown mimetype', function() {
+            assert.isUndefined(this.t.getTransformer('cats/calico'), 'found a transformer when I shouldn\'t have');
         });
     });
     describe('#transformRichest', function() {
@@ -140,20 +137,6 @@ describe('Transformime', function() {
                     assert.equal(this.dummyTransformer1.lastData, "dummy data 1");
                     assert.isUndefined(this.dummyTransformer2.lastData);
                     assert.isUndefined(this.dummyTransformer3.lastData);
-                });
-            });
-            it.skip('when called with no supported mimetypes, it uses the fallbackTransformer', function(){
-                let mimeBundle = {
-                    'video/quicktime': 'cat vid',
-                    'application/zip': 'zippy'
-                };
-
-                this.t.fallbackTransformer = new DummyTransformer("fallback/test");
-                //TODO: Fix/determine the fallbackTransformer case
-
-                let elPromise = this.t.transformRichest(mimeBundle, this.document);
-                return elPromise.then( () => {
-                    assert.equal(this.t.fallbackTransformer.lastData, '');
                 });
             });
         });
