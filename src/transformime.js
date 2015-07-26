@@ -128,7 +128,6 @@ class Transformime {
                 return transformer;
             }
         }
-        return undefined;
     }
 }
 
