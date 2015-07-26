@@ -58,10 +58,10 @@ class Transformime {
     transformRetainMimetype(data, mimetype, doc) {
         var prom = this.transform(data, mimetype, doc);
         return prom.then(el => {
-            return Promise.resolve({
+            return {
                 "mimetype": mimetype,
                 "el": el
-            });
+            };
         });
     }
 
