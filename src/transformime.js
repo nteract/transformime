@@ -48,11 +48,21 @@ class Transformime {
         }
 
         if (richTransformer){
-            let data = bundle[richTransformer.mimetype];
-            return this.transform(data, richTransformer.mimetype, doc);
+            let mimetype = richTransformer.mimetype;
+            return this.transformRetainMimetype(bundle[mimetype], mimetype, doc);
         }
 
         return Promise.reject(new Error('Transformer(s) for ' + Object.keys(bundle).join(', ') + ' not found.'));
+    }
+
+    transformRetainMimetype(data, mimetype, doc) {
+        var prom = this.transform(data, mimetype, doc);
+        return prom.then(el => {
+            return {
+                "mimetype": mimetype,
+                "el": el
+            };
+        });
     }
 
     /**
@@ -63,7 +73,9 @@ class Transformime {
      */
     transformAll(bundle, doc) {
         var mimetypes = Object.keys(bundle);
-        var promises = mimetypes.map( mimetype => { return this.transform(bundle[mimetype], mimetype, doc); });
+        var promises = mimetypes.map( mimetype => {
+            return this.transformRetainMimetype(bundle[mimetype], mimetype, doc);
+        });
         return Promise.all(promises);
     }
 

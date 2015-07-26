@@ -103,10 +103,13 @@ describe('Transformime', function() {
                 };
 
                 var elPromise = this.t.transformRichest(mimeBundle, this.document);
-                return elPromise.then( () => {
+                return elPromise.then( (mimel) => {
                     assert.isUndefined(this.dummyTransformer1.lastData);
                     assert.isUndefined(this.dummyTransformer2.lastData);
                     assert.equal(this.dummyTransformer3.lastData, "dummy data 3");
+
+                    assert.equal(mimel.mimetype, "transformime/dummy3");
+                    assert.equal(mimel.el.textContent, "dummy data 3");
                 });
 
             });
@@ -164,10 +167,27 @@ describe('Transformime', function() {
             };
 
             var elPromise = this.t.transformAll(mimeBundle, this.document);
-            return elPromise.then( () => {
+            return elPromise.then( (els) => {
                 assert.equal(this.dummyTransformer1.lastData, "dummy data 1");
                 assert.equal(this.dummyTransformer2.lastData, "dummy data 2");
                 assert.equal(this.dummyTransformer3.lastData, "dummy data 3");
+
+                els.map(mimel => {
+
+                    switch (mimel.mimetype){
+                        case "transformime/dummy1":
+                            assert.equal("dummy data 1", mimel.el.textContent);
+                            break;
+                        case "transformime/dummy2":
+                            assert.equal("dummy data 2", mimel.el.textContent);
+                            break;
+                        case "transformime/dummy3":
+                            assert.equal("dummy data 3", mimel.el.textContent);
+                            break;
+                    }
+
+                });
+
             });
 
         });
