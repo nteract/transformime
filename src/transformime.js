@@ -2,7 +2,6 @@
 
 import {TransformerBase} from './transformer-base';
 import {TextTransformer} from './text.transformer';
-import {DefaultTransformer} from './default.transformer';
 import {ImageTransformer} from './image.transformer';
 import {HTMLTransformer} from './html.transformer';
 /**
@@ -131,4 +130,4 @@ class Transformime {
     }
 }
 
-export default {Transformime, TransformerBase, TextTransformer, DefaultTransformer, ImageTransformer, HTMLTransformer};
+export default {Transformime, TransformerBase, TextTransformer, ImageTransformer, HTMLTransformer};
