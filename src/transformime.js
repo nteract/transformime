@@ -14,10 +14,8 @@ class Transformime {
      * Public constructor
      * @param  {TransformerBase[]} transformers       list of transformers, in reverse
      *                                          priority order
-     * @param  {TransformerBase} fallbackTransformer  transformer to default to when a
-     *                                          mimetype is unsupported
      */
-    constructor(transformers, fallbackTransformer) {
+    constructor(transformers) {
 
         // Initialize instance variables.
         this.transformers = transformers || [
@@ -26,19 +24,28 @@ class Transformime {
             new ImageTransformer('image/jpeg'),
             new HTMLTransformer()
         ];
-        this.fallbackTransformer = fallbackTransformer || new DefaultTransformer();
     }
 
     /**
      * Transforms a mime bundle, using the richest available representation,
-     * into an HTMLElement. Uses fallback transformer otherwise.
+     * into an HTMLElement.
      * @param  {any}      bundle {mimetype1: data1, mimetype2: data2, ...}
      * @param  {Document} doc    Any of window.document, iframe.contentDocument
      * @return {Promise<Object>}
      */
     transformRichest(bundle, doc) {
         let element;
-        let richTransformer = this.fallbackTransformer;
+
+        if (this.transformers.length <= 0) {
+            // Empty transformers
+            return Promise.reject(new Error("No transformers configured"));
+        }
+
+        if (Object.keys(bundle).length <= 0) {
+            return Promise.reject(new Error("MIME Bundle empty"));
+        }
+
+        let richTransformer;
 
         // Choose the last transformer as the most rich
         for (let transformer of this.transformers) {
@@ -97,12 +104,11 @@ class Transformime {
      */
     transform(data, mimetype, doc) {
         let transformer = this.getTransformer(mimetype);
-        // TODO: Handle the fallbackTransformer case
         if (transformer) {
             // Don't assume the transformation will return a promise.  Also
             // don't assume the transformation will succeed.
             try {
-                return Promise.resolve(transformer.transform(data, doc || document));
+                return Promise.resolve(transformer.transform(data, doc));
             } catch (e) {
                 return Promise.reject(e);
             }
@@ -122,7 +128,6 @@ class Transformime {
                 return transformer;
             }
         }
-        return null;
     }
 }
 
