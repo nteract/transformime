@@ -108,7 +108,7 @@ class Transformime {
             // Don't assume the transformation will return a promise.  Also
             // don't assume the transformation will succeed.
             try {
-                return Promise.resolve(transformer.transform(data, doc || document));
+                return Promise.resolve(transformer.transform(data, doc));
             } catch (e) {
                 return Promise.reject(e);
             }
