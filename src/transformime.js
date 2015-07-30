@@ -114,16 +114,18 @@ class Transformime {
      * Sets a transformer matching the mimetype
      * @param {string|} mimetype - the data type (e.g. text/plain, text/html, image/png)
      * @param {function} transformer
+     * @return {function} inserted transformer function (may be different than arg)
      */
     set(mimetype, transformer) {
         this.del(mimetype);
-        this.push(transformer, mimetype);
+        return this.push(transformer, mimetype);
     }
     
     /**
      * Appends a transformer to the transformer list.
      * @param  {function} transformer
      * @param  {string} mimetype
+     * @return {function} inserted transformer function (may be different than arg)
      */
     push(transformer, mimetype) {
         // If the mimetype specified is different than the mimetype of the
@@ -138,6 +140,7 @@ class Transformime {
         if (!transformer.mimetype) throw Error('Could not infer transformer mimetype');
         
         this.transformers.push(transformer);
+        return transformer;
     }
 }
 
