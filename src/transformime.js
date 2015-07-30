@@ -18,6 +18,7 @@ class Transformime {
         if (transformers) {
             this.transformers = transformers;
         } else {
+            this.transformers = [];
             this.push(TextTransformer);
             this.push(ImageTransformer, 'image/png');
             this.push(ImageTransformer, 'image/jpeg');
@@ -75,7 +76,10 @@ class Transformime {
             // Don't assume the transformation will return a promise.  Also
             // don't assume the transformation will succeed.
             try {
-                return Promise.resolve({el: transformer.transform(data, document)});
+                return Promise.resolve({
+                    mimetype: mimetype, 
+                    el: transformer.call(transformer, data, document)
+                });
             } catch (e) {
                 return Promise.reject(e);
             }
@@ -131,16 +135,19 @@ class Transformime {
         // If the mimetype specified is different than the mimetype of the
         // transformer, make a copy of the transformer and set the new mimetype
         // on the copy.
+        let transform;
         if (mimetype && transformer.mimetype !== mimetype) {
-            transformer = (...args) => transformer(...args);
-            transformer.mimetype = mimetype;
+            transform = function(...args) { return transformer.call(this, ...args); };
+            transform.mimetype = mimetype;
+        } else {
+            transform = transformer;
         }
         
         // Verify a mimetype is set on the transformer.
-        if (!transformer.mimetype) throw Error('Could not infer transformer mimetype');
+        if (!transform.mimetype) throw Error('Could not infer transformer mimetype');
         
-        this.transformers.push(transformer);
-        return transformer;
+        this.transformers.push(transform);
+        return transform;
     }
 }
 

@@ -32,22 +32,22 @@ describe('Transformime defaults', function() {
 describe('Transformime', function() {
     beforeEach(function() {
         this.t = new Transformime();
-        this.dummyTransformer1 = t.push(DummyTransformer, "transformime/dummy1");
-        this.dummyTransformer2 = t.push(DummyTransformer, "transformime/dummy2");
-        this.dummyTransformer3 = t.push(DummyTransformer, "transformime/dummy3");
+        this.dummyTransformer1 = this.t.push(DummyTransformer, "transformime/dummy1");
+        this.dummyTransformer2 = this.t.push(DummyTransformer, "transformime/dummy2");
+        this.dummyTransformer3 = this.t.push(DummyTransformer, "transformime/dummy3");
         this.document = jsdom();
     });
     describe('#transform', function() {
         it('should have called our DummyRender', function() {
             var elPromise = this.t.transform("dummy-data", "transformime/dummy1", this.document);
 
-            return elPromise.then((el) => {
+            return elPromise.then((results) => {
                 assert.equal(DummyTransformer.lastData, "dummy-data");
                 assert.equal(DummyTransformer.lastDoc, this.document);
 
                 // el should be an HTMLElement, which only exists in jsdom or on a
                 // real document.
-                assert(el instanceof this.document.defaultView.HTMLElement);
+                assert(results.el instanceof this.document.defaultView.HTMLElement);
             });
 
         });
@@ -78,11 +78,11 @@ describe('Transformime', function() {
                 };
 
                 var elPromise = this.t.transformRichest(mimeBundle, this.document);
-                return elPromise.then( (mimel) => {
+                return elPromise.then( (results) => {
                     assert.equal(DummyTransformer.lastData, "dummy data 3");
-
-                    assert.equal(mimel.mimetype, "transformime/dummy3");
-                    assert.equal(mimel.el.textContent, "dummy data 3");
+                    
+                    assert.equal(results.mimetype, "transformime/dummy3");
+                    assert.equal(results.el.textContent, "dummy data 3");
                 });
 
             });

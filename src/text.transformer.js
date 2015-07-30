@@ -1,7 +1,7 @@
 "use strict";
 
-export function TextTransformer(data, doc) {
-    var el = doc.createElement('pre');
+export function TextTransformer(data, document) {
+    var el = document.createElement('pre');
     el.textContent = data;
     return el;
 }
