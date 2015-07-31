@@ -29,7 +29,7 @@ class Transformime {
      * @param  {Document} document - Any of window.document, iframe.contentDocument
      * @return {Promise<{mimetype: string, el: HTMLElement}>}
      */
-    transformRichest(bundle, document) {
+    transform(bundle, document) {
         let element;
 
         if (this.transformers.length <= 0) {
@@ -40,8 +40,9 @@ class Transformime {
         if (Object.keys(bundle).length <= 0) {
             return Promise.reject(new Error("MIME Bundle empty"));
         }
-
+        
         let richMimetype;
+        let richTransformer;
 
         // Choose the last transformer as the most rich
         for (let transformer of this.transformers) {
@@ -56,40 +57,28 @@ class Transformime {
                 for (let transformer_mimetype of transformer_mimetypes) {
                     if (transformer_mimetype in bundle) {
                         richMimetype = transformer_mimetype;
+                        richTransformer = transformer;
                     }
                 }
             }
         }
 
-        if (richMimetype){
-            return this.transform(bundle[richMimetype], richMimetype, document);
-        }
-
-        return Promise.reject(new Error('Transformer(s) for ' + Object.keys(bundle).join(', ') + ' not found.'));
-    }
-
-    /**
-     * Transforms a specific mime type into an HTMLElement.
-     * @param  {string} mimetype - MIME type (e.g. text/html, image/png)
-     * @param  {any} data - Raw data
-     * @param  {Document} document - Any of window.document, iframe.contentDocument
-     * @return {Promise<{mimetype: string, el: HTMLElement}>}
-     */
-    transform(mimetype, data, document) {
-        let transformer = this.get(mimetype);
-        if (transformer) {
+        if (richMimetype && richTransformer) {
             // Don't assume the transformation will return a promise.  Also
             // don't assume the transformation will succeed.
             try {
-                return Promise.resolve(transformer.call(transformer, data, mimetype, document)).then(el => {
-                    return { mimetype: mimetype, el: el };
+                return Promise.resolve(richTransformer.call(richTransformer, 
+                    richMimetype, bundle[richMimetype], document)).then(el => {
+                    
+                    return { mimetype: richMimetype, el: el };
                 });
             } catch (e) {
                 return Promise.reject(e);
             }
+        } else {
+            return Promise.reject(new Error('Transformer(s) for ' + Object.keys(bundle).join(', ') + ' not found.'));
         }
 
-        return Promise.reject(new Error('Transformer for mimetype ' + mimetype + ' not found.'));
     }
     
     /**

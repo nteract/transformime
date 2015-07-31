@@ -14,12 +14,12 @@ describe('html transformer', function() {
     });
 
     it('should have the text/html mimetype', function() {
-        assert.equal(HTMLTransformer.mimetype, "text/html");
+        assert.equal(HTMLTransformer.mimetype, 'text/html');
     });
     describe('#transform', function() {
         it('should create a div with all the passed in elements', function() {
             var htmlText = "<h1>This is great</h1>";
-            return this.t.transform(HTMLTransformer.mimetype, htmlText, this.document).then(results => {
+            return this.t.transform({'text/html': htmlText}, this.document).then(results => {
                 assert.equal(results.el.innerHTML, htmlText);
                 assert.equal(results.el.localName, "div");
             });

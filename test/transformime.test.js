@@ -7,7 +7,7 @@ import {Transformime} from '../src/transformime';
 /**
  * Dummy Transformer for spying on
  */
-function DummyTransformer(data, mimetype, doc) {
+function DummyTransformer(mimetype, data, doc) {
     let pre = doc.createElement('pre');
     DummyTransformer.lastData = data;
     DummyTransformer.lastDoc = doc;
@@ -41,7 +41,7 @@ describe('Transformime', function() {
     });
     describe('#transform', function() {
         it('should have called our DummyRender', function() {
-            var elPromise = this.t.transform("transformime/dummy1", "dummy-data", this.document);
+            var elPromise = this.t.transform({"transformime/dummy1": "dummy-data"}, this.document);
 
             return elPromise.then((results) => {
                 assert.equal(DummyTransformer.lastData, "dummy-data");
@@ -54,27 +54,12 @@ describe('Transformime', function() {
 
         });
         it('should fail when the mimetype is not known', function() {
-            let elPromise = this.t.transform("transformime/unknown", "my-data", this.doc);
+            let elPromise = this.t.transform({"transformime/unknown": "my-data"}, this.doc);
 
             return elPromise.catch((err) => {
-                assert.equal(err.message, 'Transformer for mimetype transformime/unknown not found.');
+                assert.equal(err.message, 'Transformer(s) for transformime/unknown not found.');
             });
         });
-    });
-    describe('#get', function() {
-        it('should get the right transformer for a given mimetype', function() {
-            let transformer = this.t.get('transformime/dummy1');
-            assert.equal(this.dummyTransformer1, transformer);
-        });
-        it('should return undefined with an unknown mimetype', function() {
-            assert.isUndefined(this.t.get('cats/calico'), 'found a transformer when I shouldn\'t have');
-        });
-        it('get respects priority order', function() {
-            let transformer = this.t.get('transformime/a');
-            assert.equal(this.dummyTransformer5, transformer);
-        });
-    });
-    describe('#transformRichest', function() {
         describe('should only render the "richest" of the transformers', function() {
             it('when called with all mimetypes in the mimebundle, only return lastmost', function() {
                 let mimeBundle = {
@@ -83,7 +68,7 @@ describe('Transformime', function() {
                     'transformime/dummy3': 'dummy data 3'
                 };
 
-                var elPromise = this.t.transformRichest(mimeBundle, this.document);
+                var elPromise = this.t.transform(mimeBundle, this.document);
                 return elPromise.then( (results) => {
                     assert.equal(DummyTransformer.lastData, "dummy data 3");
                     
@@ -98,7 +83,7 @@ describe('Transformime', function() {
                     'transformime/dummy2': 'dummy data 2'
                 };
 
-                let elPromise = this.t.transformRichest(mimeBundle, this.document);
+                let elPromise = this.t.transform(mimeBundle, this.document);
                 return elPromise.then( () => {
                     assert.equal(DummyTransformer.lastData, "dummy data 2");
                 });
@@ -112,11 +97,24 @@ describe('Transformime', function() {
                     'application/zip': 'zippy'
                 };
 
-                let elPromise = this.t.transformRichest(mimeBundle, this.document);
+                let elPromise = this.t.transform(mimeBundle, this.document);
                 return elPromise.then( () => {
                     assert.equal(DummyTransformer.lastData, "dummy data 1");
                 });
             });
+        });
+    });
+    describe('#get', function() {
+        it('should get the right transformer for a given mimetype', function() {
+            let transformer = this.t.get('transformime/dummy1');
+            assert.equal(this.dummyTransformer1, transformer);
+        });
+        it('should return undefined with an unknown mimetype', function() {
+            assert.isUndefined(this.t.get('cats/calico'), 'found a transformer when I shouldn\'t have');
+        });
+        it('get respects priority order', function() {
+            let transformer = this.t.get('transformime/a');
+            assert.equal(this.dummyTransformer5, transformer);
         });
     });
 });
