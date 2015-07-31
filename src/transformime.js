@@ -41,7 +41,7 @@ class Transformime {
             return Promise.reject(new Error("MIME Bundle empty"));
         }
 
-        let richTransformer;
+        let richMimetype;
 
         // Choose the last transformer as the most rich
         for (let transformer of this.transformers) {
@@ -49,22 +49,20 @@ class Transformime {
                 
                 // Make sure the transformer's mimetype is in array format.
                 let transformer_mimetypes = transformer.mimetype;
-                if (!this._isArray(transformer_mimetypes)) {
+                if (!Array.isArray(transformer_mimetypes)) {
                     transformer_mimetypes = [transformer_mimetypes];
                 }
                 
                 for (let transformer_mimetype of transformer_mimetypes) {
                     if (transformer_mimetype in bundle) {
-                        richTransformer = transformer;
-                        break;
+                        richMimetype = transformer_mimetype;
                     }
                 }
             }
         }
 
-        if (richTransformer){
-            let mimetype = richTransformer.mimetype;
-            return this.transform(bundle[mimetype], mimetype, document);
+        if (richMimetype){
+            return this.transform(bundle[richMimetype], richMimetype, document);
         }
 
         return Promise.reject(new Error('Transformer(s) for ' + Object.keys(bundle).join(', ') + ' not found.'));
@@ -102,7 +100,7 @@ class Transformime {
         
         // Convert mimetype to an array.
         let mimetypes = mimetype;
-        if (!this._isArray(mimetypes)) {
+        if (!Array.isArray(mimetypes)) {
             mimetypes = [mimetypes];
         }
         
@@ -120,7 +118,7 @@ class Transformime {
                 // mimetypes supported by the transformer, remove it from the list.
                 // If the transformer mimetype list is then empty, remove the
                 // transformer.
-                } else if (this._isArray(transformer.mimetype) && mimetype in transformer.mimetype) {
+            } else if (Array.isArray(transformer.mimetype) && mimetype in transformer.mimetype) {
                     if (transformer.mimetype.length == 1) {
                         this.transformers.splice(i, 1);
                         i--;
@@ -138,11 +136,14 @@ class Transformime {
      * @return {function} Matching transformer
      */
     get(mimetype) {
-        for (let transformer of this.transformers) {
+        
+        // Loop through the transformers array in reverse.
+        for (let i = this.transformers.length-1; i >= 0; i--) {
+            let transformer = this.transformers[i];
             
             // Get an array of the mimetypes that the transformer supports.
             let transformer_mimetypes = transformer.mimetype;
-            if (!this._isArray(transformer_mimetypes)) {
+            if (!Array.isArray(transformer_mimetypes)) {
                 transformer_mimetypes = [transformer_mimetypes];
             }
             
@@ -198,16 +199,6 @@ class Transformime {
         let transform = function(...args) { return transformer.call(this, ...args); };
         transform.mimetype = mimetype;
         return transform;
-    }
-    
-    /**
-     * Check if value is an array.
-     * @param  {Object}  x
-     * @return {Boolean}
-     */
-    _isArray(x) {
-        return Array.isArray(x) ||
-            (typeof x === 'object' && Object.prototype.toString.call(x) === '[object Array]');
     }
 }
 

@@ -35,6 +35,8 @@ describe('Transformime', function() {
         this.dummyTransformer1 = this.t.push(DummyTransformer, "transformime/dummy1");
         this.dummyTransformer2 = this.t.push(DummyTransformer, "transformime/dummy2");
         this.dummyTransformer3 = this.t.push(DummyTransformer, "transformime/dummy3");
+        this.dummyTransformer4 = this.t.push(DummyTransformer, "transformime/a");
+        this.dummyTransformer5 = this.t.push(DummyTransformer, "transformime/a");
         this.document = jsdom();
     });
     describe('#transform', function() {
@@ -66,6 +68,10 @@ describe('Transformime', function() {
         });
         it('should return undefined with an unknown mimetype', function() {
             assert.isUndefined(this.t.get('cats/calico'), 'found a transformer when I shouldn\'t have');
+        });
+        it('get respects priority order', function() {
+            let transformer = this.t.get('transformime/a');
+            assert.equal(this.dummyTransformer5, transformer);
         });
     });
     describe('#transformRichest', function() {

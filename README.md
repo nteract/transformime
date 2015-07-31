@@ -26,13 +26,35 @@ It returns promises for all the HTMLElements.
 > // In node we'll need a DOM to work with
 > var document = require('jsdom').jsdom();
 > // For browsers, they can pass document around (or an iframe's contentDocument)
-> var transformime = new require('transformime').Transformime;
-> var p1 = transformime.transform("<h1>Woo</h1>", "text/html", document);
+> var Transformime = require('transformime').Transformime;
+> var transformime = new Transformime();
+> p1 = transformime.transform("<h1>Woo</h1>", "text/html", document)
+Promise { <pending> }
+> p1
+Promise {
+  { mimetype: 'text/html',
+  el:
+   { _events: {},
+     _childNodes: [Object],
+     _childNodesList: null,
+     _ownerDocument: [Object],
+     _childrenList: null,
+     _version: 1,
+     _parentNode: null,
+     _memoizedQueries: {},
+     _readonly: false,
+     _namespaceURI: 'http://www.w3.org/1999/xhtml',
+     _prefix: null,
+     _localName: 'div',
+     _attributes: {},
+     _settingCssText: false,
+     _style: [Object] } } }
 > p1.then(function(result){
 ...   console.log(result.el.innerHTML);
-...   console.log(result.el.textContent)
+...   console.log(result.el.textContent);
 ... });
-<h1>Woo</h1>
+Promise { <pending> }
+> <h1>Woo</h1>
 Woo
 ```
 
