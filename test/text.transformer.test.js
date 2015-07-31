@@ -19,7 +19,7 @@ describe('text transformer', function() {
     describe('#transform', function() {
         it('should create a pre with all the passed in elements', function() {
             var text = "There is no text but text.\nWoo.";
-            var transformed = this.t.transform(text, TextTransformer.mimetype, this.document);
+            var transformed = this.t.transform(TextTransformer.mimetype, text, this.document);
             return transformed.then(results => {
                 assert.equal(results.el.innerHTML, text);
                 assert.equal(results.el.textContent, text);

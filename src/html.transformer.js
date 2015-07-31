@@ -1,6 +1,6 @@
 "use strict";
 
-export function HTMLTransformer(data, mimetype, document) {
+export function HTMLTransformer(mimetype, data, document) {
     var el = document.createElement('div');
     // TODO: Pull scripts from inside, create elements for them
     el.innerHTML = data;

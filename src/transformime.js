@@ -70,12 +70,12 @@ class Transformime {
 
     /**
      * Transforms a specific mime type into an HTMLElement.
-     * @param  {any} data - Raw data
      * @param  {string} mimetype - MIME type (e.g. text/html, image/png)
+     * @param  {any} data - Raw data
      * @param  {Document} document - Any of window.document, iframe.contentDocument
      * @return {Promise<{mimetype: string, el: HTMLElement}>}
      */
-    transform(data, mimetype, document) {
+    transform(mimetype, data, document) {
         let transformer = this.get(mimetype);
         if (transformer) {
             // Don't assume the transformation will return a promise.  Also

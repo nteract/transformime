@@ -3,7 +3,7 @@
 /**
  * Converts b64 image mimetypes to img elements.
  */
-export function ImageTransformer(data, mimetype, document) {
+export function ImageTransformer(mimetype, data, document) {
     let img = document.createElement('img');
     img.src = 'data:' + mimetype + ';base64,'+ data;
     return img;

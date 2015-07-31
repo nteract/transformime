@@ -19,7 +19,7 @@ describe('image transformer', function() {
     describe('#transform', function() {
         it('should create an <img> with the right mimetype', function() {
             let imageData = "R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7";
-            let p1 = this.t.transform(imageData, 'image/png', this.document).then(results => {
+            let p1 = this.t.transform('image/png', imageData, this.document).then(results => {
                 assert.equal(results.el.src, "data:image/png;base64," + imageData);
                 assert.equal(results.el.localName, "img");
                 assert.equal(results.el.innerHTML, "");
@@ -28,7 +28,7 @@ describe('image transformer', function() {
             
 
             let imageData2 = "R0lGODlhAQABAIAAAP///wAAACwAAAAAAQABAAACAkQBADs=";
-            let p2 = this.t.transform(imageData, 'image/gif', this.document).then(results => {
+            let p2 = this.t.transform('image/gif', imageData, this.document).then(results => {
                 assert.equal(results.el.src, "data:image/gif;base64," + imageData);
                 assert.equal(results.el.localName, "img");
                 assert.equal(results.el.innerHTML, "");

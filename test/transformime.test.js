@@ -41,7 +41,7 @@ describe('Transformime', function() {
     });
     describe('#transform', function() {
         it('should have called our DummyRender', function() {
-            var elPromise = this.t.transform("dummy-data", "transformime/dummy1", this.document);
+            var elPromise = this.t.transform("transformime/dummy1", "dummy-data", this.document);
 
             return elPromise.then((results) => {
                 assert.equal(DummyTransformer.lastData, "dummy-data");
@@ -54,7 +54,7 @@ describe('Transformime', function() {
 
         });
         it('should fail when the mimetype is not known', function() {
-            let elPromise = this.t.transform("my-data", "transformime/unknown", this.doc);
+            let elPromise = this.t.transform("transformime/unknown", "my-data", this.doc);
 
             return elPromise.catch((err) => {
                 assert.equal(err.message, 'Transformer for mimetype transformime/unknown not found.');
