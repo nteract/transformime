@@ -7,7 +7,7 @@ import {Transformime} from '../src/transformime';
 /**
  * Dummy Transformer for spying on
  */
-function DummyTransformer(data, doc) {
+function DummyTransformer(data, mimetype, doc) {
     let pre = doc.createElement('pre');
     DummyTransformer.lastData = data;
     DummyTransformer.lastDoc = doc;
