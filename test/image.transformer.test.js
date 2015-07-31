@@ -9,8 +9,8 @@ describe('image transformer', function() {
     beforeEach(function() {
         this.document = jsdom();
         this.t = new Transformime();
-        t.transformers = [];
-        t.push(ImageTransformer);
+        this.t.transformers = [];
+        this.t.push(ImageTransformer);
     });
 
     it('supports multiple mimetypes', function() {
@@ -18,18 +18,23 @@ describe('image transformer', function() {
     });
     describe('#transform', function() {
         it('should create an <img> with the right mimetype', function() {
-            var imageData = "R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7";
-            var el = t.transform(imageData, 'image/png', this.document);
+            let imageData = "R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7";
+            let p1 = this.t.transform(imageData, 'image/png', this.document).then(results => {
+                assert.equal(results.el.src, "data:image/png;base64," + imageData);
+                assert.equal(results.el.localName, "img");
+                assert.equal(results.el.innerHTML, "");
+            });
+            
+            
 
-            assert.equal(el.src, "data:image/png;base64," + imageData);
-            assert.equal(el.localName, "img");
-            assert.equal(el.innerHTML, "");
-
-            imageData = "R0lGODlhAQABAIAAAP///wAAACwAAAAAAQABAAACAkQBADs=";
-            var el2 = t.transform(imageData, 'image/gif', this.document);
-            assert.equal(el2.src, "data:image/gif;base64," + imageData);
-            assert.equal(el2.localName, "img");
-            assert.equal(el2.innerHTML, "");
+            let imageData2 = "R0lGODlhAQABAIAAAP///wAAACwAAAAAAQABAAACAkQBADs=";
+            let p2 = this.t.transform(imageData, 'image/gif', this.document).then(results => {
+                assert.equal(results.el.src, "data:image/gif;base64," + imageData);
+                assert.equal(results.el.localName, "img");
+                assert.equal(results.el.innerHTML, "");
+            });
+            
+            return Promise.all([p1, p2]);
         });
     });
 });

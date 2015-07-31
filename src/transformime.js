@@ -19,7 +19,7 @@ class Transformime {
         this.push(TextTransformer);
         this.push(ImageTransformer);
         this.push(HTMLTransformer);
-        transformers.map((transformer) => this.push(transformer));
+        if (transformers) transformers.map((transformer) => this.push(transformer));
     }
 
     /**
@@ -83,9 +83,8 @@ class Transformime {
             // Don't assume the transformation will return a promise.  Also
             // don't assume the transformation will succeed.
             try {
-                return Promise.resolve({
-                    mimetype: mimetype, 
-                    el: transformer.call(transformer, data, mimetype, document)
+                return Promise.resolve(transformer.call(transformer, data, mimetype, document)).then(el => {
+                    return { mimetype: mimetype, el: el };
                 });
             } catch (e) {
                 return Promise.reject(e);
