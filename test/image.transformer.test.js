@@ -2,35 +2,39 @@ import {assert} from 'chai';
 
 import {jsdom} from 'jsdom';
 
+import {Transformime} from '../src/transformime';
 import {ImageTransformer} from '../src/transformime';
 
 describe('image transformer', function() {
     beforeEach(function() {
         this.document = jsdom();
+        this.t = new Transformime();
+        this.t.transformers = [];
+        this.t.push(ImageTransformer);
     });
 
-    it('should accept a mimetype', function() {
-        var imt = new ImageTransformer('image/png');
-        assert.equal(imt.mimetype, "image/png");
-        var imt2 = new ImageTransformer('image/jpeg');
-        assert.equal(imt2.mimetype, "image/jpeg");
+    it('supports multiple mimetypes', function() {
+        assert.isArray(ImageTransformer.mimetype);
     });
     describe('#transform', function() {
         it('should create an <img> with the right mimetype', function() {
-            var imt = new ImageTransformer('image/png');
-            var imageData = "R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7";
-            var el = imt.transform(imageData, this.document);
+            let imageData = "R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7";
+            let p1 = this.t.transform({'image/png': imageData}, this.document).then(results => {
+                assert.equal(results.el.src, "data:image/png;base64," + imageData);
+                assert.equal(results.el.localName, "img");
+                assert.equal(results.el.innerHTML, "");
+            });
+            
+            
 
-            assert.equal(el.src, "data:image/png;base64," + imageData);
-            assert.equal(el.localName, "img");
-            assert.equal(el.innerHTML, "");
-
-            var imt2 = new ImageTransformer('image/gif');
-            imageData = "R0lGODlhAQABAIAAAP///wAAACwAAAAAAQABAAACAkQBADs=";
-            var el2 = imt2.transform(imageData, this.document);
-            assert.equal(el2.src, "data:image/gif;base64," + imageData);
-            assert.equal(el2.localName, "img");
-            assert.equal(el2.innerHTML, "");
+            let imageData2 = "R0lGODlhAQABAIAAAP///wAAACwAAAAAAQABAAACAkQBADs=";
+            let p2 = this.t.transform({'image/gif': imageData}, this.document).then(results => {
+                assert.equal(results.el.src, "data:image/gif;base64," + imageData);
+                assert.equal(results.el.localName, "img");
+                assert.equal(results.el.innerHTML, "");
+            });
+            
+            return Promise.all([p1, p2]);
         });
     });
 });

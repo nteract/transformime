@@ -1,6 +1,5 @@
 "use strict";
 
-import {TransformerBase} from './transformer-base';
 import {TextTransformer} from './text.transformer';
 import {ImageTransformer} from './image.transformer';
 import {HTMLTransformer} from './html.transformer';
@@ -11,28 +10,26 @@ class Transformime {
 
     /**
      * Public constructor
-     * @param  {TransformerBase[]} transformers       list of transformers, in reverse
-     *                                          priority order
+     * @param  {function[]} transformers - list of transformers, in reverse priority order.
      */
     constructor(transformers) {
 
         // Initialize instance variables.
-        this.transformers = transformers || [
-            new TextTransformer(),
-            new ImageTransformer('image/png'),
-            new ImageTransformer('image/jpeg'),
-            new HTMLTransformer()
-        ];
+        this.transformers = [];
+        this.push(TextTransformer);
+        this.push(ImageTransformer);
+        this.push(HTMLTransformer);
+        if (transformers) transformers.map((transformer) => this.push(transformer));
     }
 
     /**
      * Transforms a mime bundle, using the richest available representation,
      * into an HTMLElement.
-     * @param  {any}      bundle {mimetype1: data1, mimetype2: data2, ...}
-     * @param  {Document} doc    Any of window.document, iframe.contentDocument
-     * @return {Promise<Object>}
+     * @param  {any}      bundle - {mimetype1: data1, mimetype2: data2, ...}
+     * @param  {Document} document - Any of window.document, iframe.contentDocument
+     * @return {Promise<{mimetype: string, el: HTMLElement}>}
      */
-    transformRichest(bundle, doc) {
+    transform(bundle, document) {
         let element;
 
         if (this.transformers.length <= 0) {
@@ -43,91 +40,155 @@ class Transformime {
         if (Object.keys(bundle).length <= 0) {
             return Promise.reject(new Error("MIME Bundle empty"));
         }
-
+        
+        let richMimetype;
         let richTransformer;
 
         // Choose the last transformer as the most rich
         for (let transformer of this.transformers) {
-            if (transformer.mimetype in bundle) {
-                richTransformer = transformer;
+            if (transformer.mimetype) {
+                
+                // Make sure the transformer's mimetype is in array format.
+                let transformer_mimetypes = transformer.mimetype;
+                if (!Array.isArray(transformer_mimetypes)) {
+                    transformer_mimetypes = [transformer_mimetypes];
+                }
+                
+                for (let transformer_mimetype of transformer_mimetypes) {
+                    if (transformer_mimetype in bundle) {
+                        richMimetype = transformer_mimetype;
+                        richTransformer = transformer;
+                    }
+                }
             }
         }
 
-        if (richTransformer){
-            let mimetype = richTransformer.mimetype;
-            return this.transformRetainMimetype(bundle[mimetype], mimetype, doc);
-        }
-
-        return Promise.reject(new Error('Transformer(s) for ' + Object.keys(bundle).join(', ') + ' not found.'));
-    }
-
-    /**
-     * transformRetainMimetype is just like transform except it returns an
-     * object with both the mimetype and the element
-     * {"mimetype": mimetype, "el": el}
-     *
-     * @param  {any} data        Raw data
-     * @param  {string} mimetype Standard Mime type for the data
-     * @param  {Document} doc    The DOM to own the element
-     * @return {Object}          {"mimetype": mimetype, "el": el}
-     */
-    transformRetainMimetype(data, mimetype, doc) {
-        var prom = this.transform(data, mimetype, doc);
-        return prom.then(el => {
-            return {
-                "mimetype": mimetype,
-                "el": el
-            };
-        });
-    }
-
-    /**
-     * Transforms all of the mime types in a mime bundle into HTMLElements.
-     * @param  {any}      bundle {mimetype1: data1, mimetype2: data2, ...}
-     * @param  {Document} doc    Any of window.document, iframe.contentDocument
-     * @return {Promise<Object[]>}
-     */
-    transformAll(bundle, doc) {
-        var mimetypes = Object.keys(bundle);
-        var promises = mimetypes.map( mimetype => {
-            return this.transformRetainMimetype(bundle[mimetype], mimetype, doc);
-        });
-        return Promise.all(promises);
-    }
-
-    /**
-     * Transforms a specific mime type into an HTMLElement.
-     * @param  {any}    data     Raw data
-     * @param  {string} mimetype MIME type (e.g. text/html, image/png)
-     * @return {Promise<HTMLElement>}
-     */
-    transform(data, mimetype, doc) {
-        let transformer = this.getTransformer(mimetype);
-        if (transformer) {
+        if (richMimetype && richTransformer) {
             // Don't assume the transformation will return a promise.  Also
             // don't assume the transformation will succeed.
             try {
-                return Promise.resolve(transformer.transform(data, doc));
+                return Promise.resolve(richTransformer.call(richTransformer, 
+                    richMimetype, bundle[richMimetype], document)).then(el => {
+                    
+                    return { mimetype: richMimetype, el: el };
+                });
             } catch (e) {
                 return Promise.reject(e);
             }
+        } else {
+            return Promise.reject(new Error('Transformer(s) for ' + Object.keys(bundle).join(', ') + ' not found.'));
         }
 
-        return Promise.reject(new Error('Transformer for mimetype ' + mimetype + ' not found.'));
+    }
+    
+    /**
+     * Deletes all transformers by mimetype.
+     * @param {string|string[]} mimetype - mimetype the data type (e.g. text/plain, text/html, image/png)
+     */
+    del(mimetype) {
+        
+        // Convert mimetype to an array.
+        let mimetypes = mimetype;
+        if (!Array.isArray(mimetypes)) {
+            mimetypes = [mimetypes];
+        }
+        
+        // Remove each mimetype.
+        for (mimetype of mimetypes) {
+            for (let i = 0; i < this.transformers.length; i++) {
+                var transformer = this.transformers[i];
+                
+                // If the mimetype matches the one we want to remove, remove it.
+                if (mimetype === transformer.mimetype) {
+                    this.transformers.splice(i, 1);
+                    i--;
+                
+                // If the mimetype we want to remove is in the list of the
+                // mimetypes supported by the transformer, remove it from the list.
+                // If the transformer mimetype list is then empty, remove the
+                // transformer.
+            } else if (Array.isArray(transformer.mimetype) && mimetype in transformer.mimetype) {
+                    if (transformer.mimetype.length == 1) {
+                        this.transformers.splice(i, 1);
+                        i--;
+                    } else {
+                        transformer.mimetype.splice(transformer.mimetype.indexOf(mimetype), 1);
+                    }
+                }
+            }
+        } 
     }
 
     /**
-     * Gets a transformer matching the mimetype
-     * @param  string mimetype the data type (e.g. text/plain, text/html, image/png)
-     * @return {TransformerBase} Matching transformer
+     * Gets a transformer matching the mimetype 
+     * @param {string} mimetype - the data type (e.g. text/plain, text/html, image/png) 
+     * @return {function} Matching transformer
      */
-    getTransformer(mimetype) {
-        for (let transformer of this.transformers) {
-            if (mimetype === transformer.mimetype) {
-                return transformer;
+    get(mimetype) {
+        
+        // Loop through the transformers array in reverse.
+        for (let i = this.transformers.length-1; i >= 0; i--) {
+            let transformer = this.transformers[i];
+            
+            // Get an array of the mimetypes that the transformer supports.
+            let transformer_mimetypes = transformer.mimetype;
+            if (!Array.isArray(transformer_mimetypes)) {
+                transformer_mimetypes = [transformer_mimetypes];
+            }
+            
+            // Check if any of the mimetypes match the one we are looking for.
+            for (let transformer_mimetype of transformer_mimetypes) {
+                if (mimetype === transformer_mimetype) {
+                    return transformer;
+                }
             }
         }
     }
+
+    /**
+     * Sets a transformer matching the mimetype
+     * @param {string|string[]} mimetype - the data type (e.g. text/plain, text/html, image/png)
+     * @param {function} transformer
+     * @return {function} inserted transformer function (may be different than arg)
+     */
+    set(mimetype, transformer) {
+        this.del(mimetype);
+        return this.push(transformer, mimetype);
+    }
+    
+    /**
+     * Appends a transformer to the transformer list.
+     * @param  {function} transformer
+     * @param  {string|string[]} mimetype
+     * @return {function} inserted transformer function (may be different than arg)
+     */
+    push(transformer, mimetype) {
+        // If the mimetype specified is different than the mimetype of the
+        // transformer, make a copy of the transformer and set the new mimetype
+        // on the copy.
+        let transform = transformer;
+        if (mimetype && transformer.mimetype !== mimetype) {
+            transform = this._proxy(transformer, mimetype);
+        }
+        
+        // Verify a mimetype is set on the transformer.
+        if (!transform.mimetype) throw Error('Could not infer transformer mimetype');
+        
+        this.transformers.push(transform);
+        return transform;
+    }
+    
+    /**
+     * Create a proxy to a transformer, using another mimetype.
+     * @param  {function} transformer
+     * @param  {string|string[]} mimetype
+     * @return {function} transformer
+     */
+    _proxy(transformer, mimetype) {
+        let transform = function(...args) { return transformer.call(this, ...args); };
+        transform.mimetype = mimetype;
+        return transform;
+    }
 }
 
-export default {Transformime, TransformerBase, TextTransformer, ImageTransformer, HTMLTransformer};
+export default {Transformime, TextTransformer, ImageTransformer, HTMLTransformer};
