@@ -5,7 +5,8 @@
   "main": "lib/transformime.js",
   "scripts": {
     "prebuild": "mkdirp lib && mkdirp dist && npm run clean",
-    "test": "standard && mocha --compilers js:babel/register",
+    "test": "mocha --compilers js:babel/register",
+    "test-browser": "zuul --local --ui tape -- test/html.transformer.test.js",
     "build": "npm run build:es5 && npm run build:browser",
     "build:es5": "babel src --out-dir lib/ --source-maps",
     "build:browser": "browserify lib/*.js --outfile dist/transformime.js",
@@ -42,9 +43,9 @@
     "parallelshell": "^1.2.0",
     "rimraf": "^2.4.1",
     "standard": "^5.3.1"
-    "zuul": "^3.6.0"
   },
   "dependencies": {
+    "zuul": "^3.6.0",
     "tape": "^4.2.1"
   }
 }

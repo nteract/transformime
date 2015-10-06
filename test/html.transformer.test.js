@@ -26,10 +26,10 @@ test('html transformer', function (t) {
 
   test('should execute script tag', function(t) {
     beforeEach()
-    var htmlText = "<script>var y=3; document.createElement('div').write(y)</script>";
+    var htmlText = "<script>window.y=3;</script>"
     return tf.transform({'text/html': htmlText}, document).then(results => {
         t.equals(results.el.localName, "div", 'div node is there');
-        t.true(results.el.innerHTML.match(/3/), 'script executed properly')
+        t.equals(window.y, 3)
         t.end()
     });
   });
