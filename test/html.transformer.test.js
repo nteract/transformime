@@ -1,28 +1,45 @@
-/* global describe it beforeEach */
+var test = require('tape')
 
-import { assert } from 'chai'
-import { jsdom } from 'jsdom'
-import { Transformime } from '../src/transformime'
-import { HTMLTransformer } from '../src/transformime'
+// wtf babel i dont know
+var Transformime = require('../lib/transformime').Transformime
+var HTMLTransformer = require('../lib/transformime').HTMLTransformer;
 
-describe('html transformer', function () {
-  beforeEach(function () {
-    this.document = jsdom()
-    this.t = new Transformime()
-    this.t.transformers = []
-    this.t.push(HTMLTransformer)
-  })
+var tf
 
-  it('should have the text/html mimetype', function () {
-    assert.equal(HTMLTransformer.mimetype, 'text/html')
-  })
-  describe('#transform', function () {
-    it('should create a div with all the passed in elements', function () {
-      var htmlText = '<h1>This is great</h1>'
-      return this.t.transform({'text/html': htmlText}, this.document).then(results => {
-        assert.equal(results.el.innerHTML, htmlText)
-        assert.equal(results.el.localName, 'div')
-      })
-    })
-  })
+test('html transformer', function (t) {
+
+  test('should have the text/html mimetype', function(t) {
+    beforeEach()
+    t.equals(HTMLTransformer.mimetype, 'text/html', 'has corret mime type');
+    t.end()
+  });
+
+  test('should create a div with all the passed in elements', function(t) {
+    beforeEach()
+    var htmlText = "<h1>This is great</h1>";
+    return tf.transform({'text/html': htmlText}, document).then(results => {
+        t.equals(results.el.innerHTML, htmlText, 'inner text should be there');
+        t.equals(results.el.localName, "div", 'div node is there');
+        t.end()
+    });
+  });
+
+  test('should execute script tag', function(t) {
+    beforeEach()
+    var htmlText = "<script>var y=3; document.createElement('div').write(y)</script>";
+    return tf.transform({'text/html': htmlText}, document).then(results => {
+        t.equals(results.el.localName, "div", 'div node is there');
+        t.true(results.el.innerHTML.match(/3/), 'script executed properly')
+        t.end()
+    });
+  });
+
+  function beforeEach () {
+    tf = new Transformime();
+    tf.transformers = [];
+    tf.push(HTMLTransformer);
+  };
+
+  t.end()
+
 })
