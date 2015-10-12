@@ -20,7 +20,6 @@ class Transformime {
     this.push(HTMLTransformer)
     if (transformers) transformers.map((transformer) => this.push(transformer))
   }
-
   /**
    * Transforms a mime bundle, using the richest available representation,
    * into an HTMLElement.
@@ -29,7 +28,6 @@ class Transformime {
    * @return {Promise<{mimetype: string, el: HTMLElement}>}
    */
   transform (bundle, document) {
-
     if (this.transformers.length <= 0) {
       // Empty transformers
       return Promise.reject(new Error('No transformers configured'))
@@ -74,7 +72,6 @@ class Transformime {
     } else {
       return Promise.reject(new Error('Transformer(s) for ' + Object.keys(bundle).join(', ') + ' not found.'))
     }
-
   }
 
   /**
@@ -179,7 +176,7 @@ class Transformime {
    * @return {function} transformer
    */
   _proxy (transformer, mimetype) {
-    let transform = function (...args) {return transformer.call(this, ...args)}
+    let transform = function (...args) { return transformer.call(this, ...args) }
     transform.mimetype = mimetype
     return transform
   }

@@ -52,7 +52,6 @@ describe('Transformime', function () {
         // real document.
         assert(results.el instanceof this.document.defaultView.HTMLElement)
       })
-
     })
     it('should fail when the mimetype is not known', function () {
       let elPromise = this.t.transform({'transformime/unknown': 'my-data'}, this.doc)
@@ -76,7 +75,6 @@ describe('Transformime', function () {
           assert.equal(results.mimetype, 'transformime/dummy3')
           assert.equal(results.el.textContent, 'dummy data 3')
         })
-
       })
       it('when called with a lesser mimebundle, choose most rich', function () {
         let mimeBundle = {
