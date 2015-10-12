@@ -5,7 +5,7 @@
   "main": "lib/transformime.js",
   "scripts": {
     "prebuild": "mkdirp lib && mkdirp dist && npm run clean",
-    "test": "mocha --compilers js:babel/register",
+    "test": "standard && mocha --compilers js:babel/register",
     "build": "npm run build:es5 && npm run build:browser",
     "build:es5": "babel src --out-dir lib/ --source-maps",
     "build:browser": "browserify lib/*.js --outfile dist/transformime.js",
@@ -40,6 +40,7 @@
     "mocha": "^2.2.5",
     "nodemon": "^1.3.7",
     "parallelshell": "^1.2.0",
-    "rimraf": "^2.4.1"
+    "rimraf": "^2.4.1",
+    "standard": "^5.0.2"
   }
 }
