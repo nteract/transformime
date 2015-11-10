@@ -5,8 +5,7 @@
   "main": "lib/transformime.js",
   "scripts": {
     "prebuild": "mkdirp lib && mkdirp dist && npm run clean",
-    "test": "mocha --compilers js:babel/register",
-    "test-browser": "zuul --local --ui tape -- test/*",
+    "test": "zuul --local --ui tape -- test/*",
     "build": "npm run build:es5 && npm run build:browser",
     "build:es5": "babel src --out-dir lib/ --source-maps",
     "build:browser": "browserify lib/*.js --outfile dist/transformime.js",
