@@ -1,40 +1,37 @@
-/* global describe it beforeEach */
+var tape = require('tape')
+var Transformime = require('../src/transformime').Transformime
+var ImageTransformer = require('../src/transformime').ImageTransformer
 
-import { assert } from 'chai'
+var tf
 
-import { jsdom } from 'jsdom'
+function beforeEach () {
+  tf = new Transformime()
+  tf.transformers = []
+  tf.push(ImageTransformer)
+}
 
-import { Transformime } from '../src/transformime'
-import { ImageTransformer } from '../src/transformime'
+tape('supports multiple mimetypes', function (t) {
+  beforeEach()
+  t.true(Array.isArray(ImageTransformer.mimetype))
+  t.end()
+})
 
-describe('image transformer', function () {
-  beforeEach(function () {
-    this.document = jsdom()
-    this.t = new Transformime()
-    this.t.transformers = []
-    this.t.push(ImageTransformer)
+tape('#transform should create an <img> with the right mimetype', function (t) {
+  beforeEach()
+  let imageData = 'R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7'
+  let p1 = tf.transform({'image/png': imageData}, document).then(results => {
+    t.equal(results.el.src, 'data:image/png;base64,' + imageData)
+    t.equal(results.el.localName, 'img')
+    t.equal(results.el.innerHTML, '')
   })
 
-  it('supports multiple mimetypes', function () {
-    assert.isArray(ImageTransformer.mimetype)
+  let imageData2 = 'R0lGODlhAQABAIAAAP///wAAACwAAAAAAQABAAACAkQBADs='
+  let p2 = tf.transform({'image/gif': imageData2}, document).then(results => {
+    t.equal(results.el.src, 'data:image/gif;base64,' + imageData2)
+    t.equal(results.el.localName, 'img')
+    t.equal(results.el.innerHTML, '')
+    t.end()
   })
-  describe('#transform', function () {
-    it('should create an <img> with the right mimetype', function () {
-      let imageData = 'R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7'
-      let p1 = this.t.transform({'image/png': imageData}, this.document).then(results => {
-        assert.equal(results.el.src, 'data:image/png;base64,' + imageData)
-        assert.equal(results.el.localName, 'img')
-        assert.equal(results.el.innerHTML, '')
-      })
 
-      let imageData2 = 'R0lGODlhAQABAIAAAP///wAAACwAAAAAAQABAAACAkQBADs='
-      let p2 = this.t.transform({'image/gif': imageData2}, this.document).then(results => {
-        assert.equal(results.el.src, 'data:image/gif;base64,' + imageData2)
-        assert.equal(results.el.localName, 'img')
-        assert.equal(results.el.innerHTML, '')
-      })
-
-      return Promise.all([p1, p2])
-    })
-  })
+  return Promise.all([p1, p2])
 })

@@ -6,7 +6,7 @@
   "scripts": {
     "prebuild": "mkdirp lib && mkdirp dist && npm run clean",
     "test": "mocha --compilers js:babel/register",
-    "test-browser": "zuul --local --ui tape -- test/html.transformer.test.js",
+    "test-browser": "zuul --local --ui tape -- test/*",
     "build": "npm run build:es5 && npm run build:browser",
     "build:es5": "babel src --out-dir lib/ --source-maps",
     "build:browser": "browserify lib/*.js --outfile dist/transformime.js",
@@ -39,6 +39,7 @@
     "jsdom": "^5.6.0",
     "mkdirp": "^0.5.1",
     "mocha": "^2.2.5",
+    "babelify": "^6.1.0",
     "nodemon": "^1.3.7",
     "parallelshell": "^1.2.0",
     "rimraf": "^2.4.1",

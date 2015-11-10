@@ -1,12 +1,10 @@
 /* global describe it beforeEach before */
-
-import { assert } from 'chai'
-import { jsdom } from 'jsdom'
-import { Transformime } from '../src/transformime'
+var test = require('tape')
+var Transformime = require('../src/transformime').Transformime
 
 /**
- * Dummy Transformer for spying on
- */
+* Dummy Transformer for spying on
+*/
 function DummyTransformer (mimetype, data, doc) {
   let pre = doc.createElement('pre')
   DummyTransformer.lastData = data
@@ -15,105 +13,101 @@ function DummyTransformer (mimetype, data, doc) {
   return pre
 }
 
-describe('Transformime defaults', function () {
-  before(function () {
-    this.document = jsdom()
-  })
 
-  describe('default constructor', function () {
-    before(function () {
-      this.t = new Transformime()
-    })
-    it('should have default transformers', function () {
-      assert(Array.isArray(this.t.transformers))
-    })
-  })
+var tf
+var dummyTransformer1, dummyTransformer2, dummyTransformer3, dummyTransformer4, dummyTransformer5
+
+function beforeEach () {
+  tf = new Transformime()
+  dummyTransformer1 = tf.push(DummyTransformer, 'transformime/dummy1')
+  dummyTransformer2 = tf.push(DummyTransformer, 'transformime/dummy2')
+  dummyTransformer3 = tf.push(DummyTransformer, 'transformime/dummy3')
+  dummyTransformer4 = tf.push(DummyTransformer, 'transformime/a')
+  dummyTransformer5 = tf.push(DummyTransformer, 'transformime/a')
+}
+
+test('should have default transformers', function (t) {
+  tf = new Transformime()
+  t.true(Array.isArray(tf.transformers))
+  t.end()
 })
 
-describe('Transformime', function () {
-  beforeEach(function () {
-    this.t = new Transformime()
-    this.dummyTransformer1 = this.t.push(DummyTransformer, 'transformime/dummy1')
-    this.dummyTransformer2 = this.t.push(DummyTransformer, 'transformime/dummy2')
-    this.dummyTransformer3 = this.t.push(DummyTransformer, 'transformime/dummy3')
-    this.dummyTransformer4 = this.t.push(DummyTransformer, 'transformime/a')
-    this.dummyTransformer5 = this.t.push(DummyTransformer, 'transformime/a')
-    this.document = jsdom()
+test('should have called our DummyRender', function (t) {
+  beforeEach()
+  var elPromise = tf.transform({'transformime/dummy1': 'dummy-data'}, document)
+
+  elPromise.then((results) => {
+    t.equal(DummyTransformer.lastData, 'dummy-data')
+    t.equal(DummyTransformer.lastDoc, document)
+
+    // el should be an HTMLElement, which only exists in jsdom or on a
+    // real document.
+    t.true(results.el instanceof document.defaultView.HTMLElement)
+    t.end()
   })
-  describe('#transform', function () {
-    it('should have called our DummyRender', function () {
-      var elPromise = this.t.transform({'transformime/dummy1': 'dummy-data'}, this.document)
+})
+test('should fail when the mimetype is not known', function (t) {
+  let elPromise = tf.transform({'transformime/unknown': 'my-data'}, document)
 
-      return elPromise.then((results) => {
-        assert.equal(DummyTransformer.lastData, 'dummy-data')
-        assert.equal(DummyTransformer.lastDoc, this.document)
-
-        // el should be an HTMLElement, which only exists in jsdom or on a
-        // real document.
-        assert(results.el instanceof this.document.defaultView.HTMLElement)
-      })
-    })
-    it('should fail when the mimetype is not known', function () {
-      let elPromise = this.t.transform({'transformime/unknown': 'my-data'}, this.doc)
-
-      return elPromise.catch((err) => {
-        assert.equal(err.message, 'Transformer(s) for transformime/unknown not found.')
-      })
-    })
-    describe('should only render the "richest" of the transformers', function () {
-      it('when called with all mimetypes in the mimebundle, only return lastmost', function () {
-        let mimeBundle = {
-          'transformime/dummy1': 'dummy data 1',
-          'transformime/dummy2': 'dummy data 2',
-          'transformime/dummy3': 'dummy data 3'
-        }
-
-        var elPromise = this.t.transform(mimeBundle, this.document)
-        return elPromise.then((results) => {
-          assert.equal(DummyTransformer.lastData, 'dummy data 3')
-
-          assert.equal(results.mimetype, 'transformime/dummy3')
-          assert.equal(results.el.textContent, 'dummy data 3')
-        })
-      })
-      it('when called with a lesser mimebundle, choose most rich', function () {
-        let mimeBundle = {
-          'transformime/dummy1': 'dummy data 1',
-          'transformime/dummy2': 'dummy data 2'
-        }
-
-        let elPromise = this.t.transform(mimeBundle, this.document)
-        return elPromise.then(() => {
-          assert.equal(DummyTransformer.lastData, 'dummy data 2')
-        })
-      })
-      it("when called with mimetypes it doesn't know, it uses supported mimetypes", function () {
-        let mimeBundle = {
-          'video/quicktime': 'cat vid',
-          'transformime/dummy1': 'dummy data 1',
-          'application/x-shockwave-flash': 'flashy',
-          'application/msword': 'DOC',
-          'application/zip': 'zippy'
-        }
-
-        let elPromise = this.t.transform(mimeBundle, this.document)
-        return elPromise.then(() => {
-          assert.equal(DummyTransformer.lastData, 'dummy data 1')
-        })
-      })
-    })
+  elPromise.catch((err) => {
+    t.equal(err.message, 'Transformer(s) for transformime/unknown not found.')
+    t.end()
   })
-  describe('#get', function () {
-    it('should get the right transformer for a given mimetype', function () {
-      let transformer = this.t.get('transformime/dummy1')
-      assert.equal(this.dummyTransformer1, transformer)
-    })
-    it('should return undefined with an unknown mimetype', function () {
-      assert.isUndefined(this.t.get('cats/calico'), "found a transformer when I shouldn't have")
-    })
-    it('get respects priority order', function () {
-      let transformer = this.t.get('transformime/a')
-      assert.equal(this.dummyTransformer5, transformer)
-    })
+})
+test('when called with all mimetypes in the mimebundle, only return lastmost', function (t) {
+  let mimeBundle = {
+    'transformime/dummy1': 'dummy data 1',
+    'transformime/dummy2': 'dummy data 2',
+    'transformime/dummy3': 'dummy data 3'
+  }
+
+  var elPromise = tf.transform(mimeBundle, document)
+  elPromise.then((results) => {
+    t.equal(DummyTransformer.lastData, 'dummy data 3')
+    t.equal(results.mimetype, 'transformime/dummy3')
+    t.equal(results.el.textContent, 'dummy data 3')
+    t.end()
   })
+})
+test('when called with a lesser mimebundle, choose most rich', function (t) {
+  let mimeBundle = {
+    'transformime/dummy1': 'dummy data 1',
+    'transformime/dummy2': 'dummy data 2'
+  }
+
+  let elPromise = tf.transform(mimeBundle, document)
+  elPromise.then(() => {
+    t.equal(DummyTransformer.lastData, 'dummy data 2')
+    t.end()
+  })
+})
+test("when called with mimetypes it doesn't know, it uses supported mimetypes", function (t) {
+  let mimeBundle = {
+    'video/quicktime': 'cat vid',
+    'transformime/dummy1': 'dummy data 1',
+    'application/x-shockwave-flash': 'flashy',
+    'application/msword': 'DOC',
+    'application/zip': 'zippy'
+  }
+
+  let elPromise = tf.transform(mimeBundle, document)
+  elPromise.then(() => {
+    t.equal(DummyTransformer.lastData, 'dummy data 1')
+    t.end()
+  })
+})
+test('get should get the right transformer for a given mimetype', function (t) {
+  let transformer = tf.get('transformime/dummy1')
+  t.equal(dummyTransformer1, transformer)
+  t.end()
+})
+test('get should return undefined with an unknown mimetype', function (t) {
+  t.equal(tf.get('cats/calico'), undefined, "found a transformer when I shouldn't have")
+  t.end()
+})
+test('get respects priority order', function (t) {
+  beforeEach()
+  let transformer = tf.get('transformime/a')
+  t.equal(dummyTransformer5, transformer)
+  t.end()
 })
