@@ -5,7 +5,8 @@
   "main": "lib/transformime.js",
   "scripts": {
     "prebuild": "mkdirp lib && mkdirp dist && npm run clean",
-    "test": "zuul --local --ui tape -- test/*",
+    "test": "zuul -- test/*",
+    "test-local": "zuul --local test/*",
     "build": "npm run build:es5 && npm run build:browser",
     "build:es5": "babel src --out-dir lib/ --source-maps",
     "build:browser": "browserify lib/*.js --outfile dist/transformime.js",
