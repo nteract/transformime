@@ -1,32 +1,29 @@
-/* global describe it beforeEach */
+var tape = require('tape')
+var Transformime = require('../src/transformime').Transformime
+var TextTransformer = require('../src/transformime').TextTransformer
 
-import { assert } from 'chai'
+var tf
 
-import { jsdom } from 'jsdom'
+function beforeEach () {
+  tf = new Transformime()
+  tf.transformers = []
+  tf.push(TextTransformer)
+}
 
-import { Transformime } from '../src/transformime'
-import { TextTransformer } from '../src/transformime'
+tape('should have the text/plain mimetype', function (t) {
+  beforeEach()
+  t.equal(TextTransformer.mimetype, 'text/plain')
+  t.end()
+})
 
-describe('text transformer', function () {
-  beforeEach(function () {
-    this.document = jsdom()
-    this.t = new Transformime()
-    this.t.transformers = []
-    this.t.push(TextTransformer)
-  })
-
-  it('should have the text/plain mimetype', function () {
-    assert.equal(TextTransformer.mimetype, 'text/plain')
-  })
-  describe('#transform', function () {
-    it('should create a pre with all the passed in elements', function () {
-      var text = 'There is no text but text.\nWoo.'
-      var transformed = this.t.transform({'text/plain': text}, this.document)
-      return transformed.then(results => {
-        assert.equal(results.el.innerHTML, text)
-        assert.equal(results.el.textContent, text)
-        assert.equal(results.el.localName, 'pre')
-      })
-    })
+tape('transform should create a pre with all the passed in elements', function (t) {
+  beforeEach()
+  var text = 'There is no text but text.\nWoo.'
+  var transformed = tf.transform({'text/plain': text}, document)
+  return transformed.then(results => {
+    t.equal(results.el.innerHTML, text)
+    t.equal(results.el.textContent, text)
+    t.equal(results.el.localName, 'pre')
+    t.end()
   })
 })
