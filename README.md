@@ -16,19 +16,13 @@ npm install transformime
 
 ## Usage
 
-Transformime works in the browser (via browserify) and with jsdom!
-
-It returns promises for all the HTMLElements.
+Transformime works in the browser (via browserify), converting a mimebundle (MIME type + data) into HTML Elements. `transformime.transform` returns promises for all the HTMLElements.
 
 ### Transform a single mimetype
 
 ```javascript
-> // In node we'll need a DOM to work with
-> var document = require('jsdom').jsdom();
-> // For browsers, they can pass document around (or an iframe's contentDocument)
-> var Transformime = require('transformime').Transformime;
-> var transformime = new Transformime();
-> p1 = transformime.transform({'text/html': '<h1>Woo</h1>'}, document)
+> t = new transformime.Transformime();
+> p1 = t.transform({'text/html': '<h1>Woo</h1>'}, document)
 Promise { <pending> }
 > p1
 Promise {
@@ -62,7 +56,7 @@ Images get handled as base64 encoded data and become embedded elements.
 
 ```javascript
 > // Send an image over
-> p2 = transformime.transform({'image/png': 'R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7'}, document)
+> p2 = t.transform({'image/png': 'R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7'}, document)
 > p2.then(function(result){
 ...     console.log(result.el.src);
 ... })
@@ -72,7 +66,7 @@ data:image/png;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7
 ### Transform the richest element
 ```javascript
 > var mimes = {'text/html': '<code>import this</code>', 'text/plain': 'import this'}
-> var p3 = transformime.transform(mimes, document);
+> var p3 = t.transform(mimes, document);
 > p3.then(function(result){
 ...    console.log(result.mimetype + ": " + result.el.innerHTML)
 ... })
@@ -82,12 +76,12 @@ text/html: <code>import this</code>
 ### Working with iframes
 
 ```javascript
-> // Assume document is defined (either in browser or from jsdom) as well as transformer
 > // Create an arbitrary iframe and slap it in the body of the document
 > var iframe = document.createElement("iframe");
 > document.querySelector('body').appendChild(iframe);
 > var idoc = iframe.contentDocument;
-> var p5 = transformime.transform({'text/html': '<h1>mimetic</h1>'}, idoc);
+> // Pass the iframe's document as the document context for the created element
+> var p5 = t.transform({'text/html': '<h1>mimetic</h1>'}, idoc);
 > p5.then(function(result){
 ... idoc.querySelector('body').appendChild(result.el);
 ... })
