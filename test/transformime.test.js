@@ -40,8 +40,7 @@ test('should have called our DummyRender', function (t) {
     t.equal(DummyTransformer.lastData, 'dummy-data')
     t.equal(DummyTransformer.lastDoc, document)
 
-    // el should be an HTMLElement, which only exists in jsdom or on a
-    // real document.
+    // el should be an HTMLElement
     t.true(results.el instanceof document.defaultView.HTMLElement)
     t.end()
   })
