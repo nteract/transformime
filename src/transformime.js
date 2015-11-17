@@ -1,8 +1,8 @@
 'use strict'
 
-import { TextTransformer } from './text.transformer'
-import { ImageTransformer } from './image.transformer'
-import { HTMLTransformer } from './html.transformer'
+import { TextTransform } from './text.transform'
+import { ImageTransform } from './image.transform'
+import { HTMLTransform } from './html.transform'
 /**
  * Transforms mimetypes into HTMLElements
  */
@@ -15,9 +15,9 @@ class Transformime {
   constructor (transformers) {
     // Initialize instance variables.
     this.transformers = []
-    this.push(TextTransformer)
-    this.push(ImageTransformer)
-    this.push(HTMLTransformer)
+    this.push(TextTransform)
+    this.push(ImageTransform)
+    this.push(HTMLTransform)
     if (transformers) transformers.map((transformer) => this.push(transformer))
   }
   /**
@@ -182,4 +182,4 @@ class Transformime {
   }
 }
 
-export default {Transformime, TextTransformer, ImageTransformer, HTMLTransformer}
+export default {Transformime, TextTransform, ImageTransform, HTMLTransform}
