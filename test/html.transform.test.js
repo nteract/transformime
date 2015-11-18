@@ -1,12 +1,12 @@
 var tape = require('tape')
 var Transformime = require('../src/transformime').Transformime
-var HTMLTransformer = require('../src/transformime').HTMLTransformer
+var HTMLTransform = require('../src/transformime').HTMLTransform
 
 var tf
 
 tape('should have the text/html mimetype', function (t) {
   beforeEach()
-  t.equals(HTMLTransformer.mimetype, 'text/html', 'has corret mime type')
+  t.equals(HTMLTransform.mimetype, 'text/html', 'has corret mime type')
   t.end()
 })
 
@@ -32,5 +32,5 @@ tape('should execute script tag', function (t) {
 function beforeEach () {
   tf = new Transformime()
   tf.transformers = []
-  tf.push(HTMLTransformer)
+  tf.push(HTMLTransform)
 }

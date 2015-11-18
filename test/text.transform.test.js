@@ -1,18 +1,18 @@
 var tape = require('tape')
 var Transformime = require('../src/transformime').Transformime
-var TextTransformer = require('../src/transformime').TextTransformer
+var TextTransform = require('../src/transformime').TextTransform
 
 var tf
 
 function beforeEach () {
   tf = new Transformime()
   tf.transformers = []
-  tf.push(TextTransformer)
+  tf.push(TextTransform)
 }
 
 tape('should have the text/plain mimetype', function (t) {
   beforeEach()
-  t.equal(TextTransformer.mimetype, 'text/plain')
+  t.equal(TextTransform.mimetype, 'text/plain')
   t.end()
 })
 

@@ -1,18 +1,18 @@
 var tape = require('tape')
 var Transformime = require('../src/transformime').Transformime
-var ImageTransformer = require('../src/transformime').ImageTransformer
+var ImageTransform = require('../src/transformime').ImageTransform
 
 var tf
 
 function beforeEach () {
   tf = new Transformime()
   tf.transformers = []
-  tf.push(ImageTransformer)
+  tf.push(ImageTransform)
 }
 
 tape('supports multiple mimetypes', function (t) {
   beforeEach()
-  t.true(Array.isArray(ImageTransformer.mimetype))
+  t.true(Array.isArray(ImageTransform.mimetype))
   t.end()
 })
 
