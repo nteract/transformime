@@ -182,4 +182,12 @@ class Transformime {
   }
 }
 
-export default {Transformime, TextTransform, ImageTransform, HTMLTransform}
+export {
+    Transformime,
+    TextTransform,
+    TextTransform as TextTransformer,
+    ImageTransform,
+    ImageTransform as ImageTransformer,
+    HTMLTransform,
+    HTMLTransform as HTMLTransformer
+};
