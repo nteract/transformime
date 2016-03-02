@@ -18,7 +18,7 @@ class Transformime {
     this.push(TextTransform)
     this.push(ImageTransform)
     this.push(HTMLTransform)
-    if (transformers) transformers.map((transformer) => this.push(transformer))
+    if (transformers) transformers.forEach((transformer) => { this.push(transformer) })
   }
   /**
    * Transforms a mime bundle, using the richest available representation,
