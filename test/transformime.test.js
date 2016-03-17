@@ -1,6 +1,7 @@
 /* global describe it beforeEach before */
 var test = require('tape')
 var Transformime = require('../src/transformime').Transformime
+var createTransform = require('../src/transformime').createTransform
 
 /**
 * Dummy Transformer for spying on
@@ -109,4 +110,23 @@ test('get respects priority order', function (t) {
   let transformer = tf.get('transformime/a')
   t.equal(dummyTransformer5, transformer)
   t.end()
+})
+
+test('createTransform returns a transform function for our dummyTransformer', function (t) {
+  function dummyTransformer(mimetype, data, document) {
+    dummyTransformer.doc = document
+    let div = document.createElement('div')
+    div.innerHTML = data
+    return div
+  }
+  dummyTransformer.mimetype = 'transformime/dummy'
+
+  var transform = createTransform([dummyTransformer])
+
+  transform({'transformime/dummy': 'dummy-data'}).then((result) => {
+    t.equal(dummyTransformer.doc, document)
+    t.equal(result.mimetype, 'transformime/dummy')
+    t.equal(result.el.innerHTML, 'dummy-data')
+    t.end()
+  })
 })
