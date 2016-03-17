@@ -182,6 +182,30 @@ class Transformime {
   }
 }
 
+/**
+* Helper to create a function that transforms a MIME bundle into an HTMLElement
+* using the given document and list of transformers.
+* @param  {function[]} [transformers] List of transformers, in reverse priority order.
+* @param  {Document}   [doc]          E.g. window.document, iframe.contentDocument
+* @return {function}
+*/
+function createTransform (transformers, doc) {
+  const t = new Transformime(transformers)
+
+  if (!doc) {
+      doc = document
+  }
+
+  /**
+   * Transforms a MIME bundle into an HTMLElement.
+   * @param  {object} bundle {mimetype1: data1, mimetype2: data2, ...}
+   * @return {Promise<{mimetype: string, el: HTMLElement}>}
+   */
+  return function transform(bundle) {
+    return t.transform(bundle, doc)
+  }
+}
+
 export {
     Transformime,
     TextTransform,
@@ -189,5 +213,6 @@ export {
     ImageTransform,
     ImageTransform as ImageTransformer,
     HTMLTransform,
-    HTMLTransform as HTMLTransformer
+    HTMLTransform as HTMLTransformer,
+    createTransform
 };
