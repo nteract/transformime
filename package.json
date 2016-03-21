@@ -1,6 +1,6 @@
 {
   "name": "transformime",
-  "version": "2.1.2",
+  "version": "2.2.0",
   "description": "Transforms MIMEtypes to HTML Elements",
   "main": "lib/transformime.js",
   "scripts": {
