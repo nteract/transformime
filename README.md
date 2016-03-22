@@ -18,6 +18,35 @@ npm install transformime
 
 Transformime works in the browser (via browserify), converting a mimebundle (MIME type + data) into HTML Elements. `transformime.transform` returns promises for all the HTMLElements.
 
+### Using the helper function `createTransform`
+
+```javascript
+var transformime = require("transformime");
+var transformimeJupyter = require("transformime-jupyter-transformers");
+
+var transform = transformime.createTransform([
+    transformime.TextTransformer,
+    transformimeJupyter.PDFTransform,
+    transformime.ImageTransformer,
+    transformimeJupyter.SVGTransform,
+    transformimeJupyter.consoleTextTransform,
+    transformimeJupyter.LaTeXTransform,
+    transformimeJupyter.markdownTransform,
+    transformime.HTMLTransformer,
+    transformimeJupyter.ScriptTransform
+]);
+
+transform({
+    "text/plain": "Hello, World!",
+}).then(function onSuccess(result) {
+    mimeType = result.mimetype;
+    htmlElement = result.el;
+    console.log("Tranformime: Result:", mimeType, htmlElement);
+}, function onError(err) {
+    console.error("Transformime: Error:", err);
+});
+```
+
 ### Transform a single mimetype
 
 ```javascript
