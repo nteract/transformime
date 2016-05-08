@@ -1,11 +1,11 @@
 "use strict"
 
-var ansi_up = require('ansi_up')
+var Anser = require('anser')
 
 export function TextTransform(mimetype, value, document) {
   var el = document.createElement('pre')
-  var esc = ansi_up.escape_for_html(value)
-  el.innerHTML = ansi_up.ansi_to_html(esc)
+  var esc = Anser.escapeForHtml(value)
+  el.innerHTML = Anser.ansiToHtml(esc)
   return el
 }
 TextTransform.mimetype = ['text/plain', 'jupyter/console-text']
