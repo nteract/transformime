@@ -3,6 +3,12 @@
 import { TextTransform } from './text.transform'
 import { ImageTransform } from './image.transform'
 import { HTMLTransform } from './html.transform'
+import { SVGTransform } from './svg.transform'
+import { ConsoleTextTransform } from './console-text.transform'
+import { PDFTransform } from './pdf.transform'
+import { ScriptTransform } from './script.transform'
+import { LaTeXTransform } from './latex.transform'
+import { MarkdownTransform } from './commonmark.transform'
 /**
  * Transforms mimetypes into HTMLElements
  */
@@ -210,9 +216,21 @@ export {
     Transformime,
     TextTransform,
     TextTransform as TextTransformer,
+    ConsoleTextTransform,
+    ConsoleTextTransform as ConsoleTextTransform,
     ImageTransform,
     ImageTransform as ImageTransformer,
     HTMLTransform,
     HTMLTransform as HTMLTransformer,
+    SVGTransform,
+    SVGTransform as SVGTransform,
+    PDFTransform,
+    PDFTransform as PDFTransform,
+    ScriptTransform,
+    ScriptTransform as ScriptTransform,
+    LaTeXTransform,
+    LaTeXTransform as LaTeXTransform,
+    MarkdownTransform,
+    MarkdownTransform as MarkdownTransform,
     createTransform
 };
