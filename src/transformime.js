@@ -4,6 +4,7 @@ import { TextTransform } from './text.transform'
 import { ImageTransform } from './image.transform'
 import { HTMLTransform } from './html.transform'
 import { SVGTransform } from './svg.transform'
+import { ConsoleTextTransform } from './console-text.transform'
 /**
  * Transforms mimetypes into HTMLElements
  */
@@ -211,6 +212,8 @@ export {
     Transformime,
     TextTransform,
     TextTransform as TextTransformer,
+    ConsoleTextTransform,
+    ConsoleTextTransform as ConsoleTextTransform,
     ImageTransform,
     ImageTransform as ImageTransformer,
     HTMLTransform,
