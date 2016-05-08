@@ -6,6 +6,7 @@ import { HTMLTransform } from './html.transform'
 import { SVGTransform } from './svg.transform'
 import { ConsoleTextTransform } from './console-text.transform'
 import { PDFTransform } from './pdf.transform'
+import { ScriptTransform } from './script.transform'
 /**
  * Transforms mimetypes into HTMLElements
  */
@@ -223,5 +224,7 @@ export {
     SVGTransform as SVGTransform,
     PDFTransform,
     PDFTransform as PDFTransform,
+    ScriptTransform,
+    ScriptTransform as ScriptTransform,
     createTransform
 };
