@@ -8,6 +8,7 @@ import { ConsoleTextTransform } from './console-text.transform'
 import { PDFTransform } from './pdf.transform'
 import { ScriptTransform } from './script.transform'
 import { LaTeXTransform } from './latex.transform'
+import { MarkdownTransform } from './commonmark.transform'
 /**
  * Transforms mimetypes into HTMLElements
  */
@@ -229,5 +230,7 @@ export {
     ScriptTransform as ScriptTransform,
     LaTeXTransform,
     LaTeXTransform as LaTeXTransform,
+    MarkdownTransform,
+    MarkdownTransform as MarkdownTransform,
     createTransform
 };
