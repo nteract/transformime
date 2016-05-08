@@ -1,4 +1,4 @@
-"use strict";
+"use strict"
 
 /**
  * Transforms base 64 encoded PDF --> <a href="data:application/pdf;base64,...">
@@ -9,11 +9,11 @@
  * @return {HTMLElement}      A link element to the given PDF
  */
 export function PDFTransform(mimetype, base64PDF, document) {
-    var a = document.createElement('a');
-    a.target = '_blank';
-    a.textContent = "View PDF";
-    a.href = 'data:application/pdf;base64,' + base64PDF;
+    var a = document.createElement('a')
+    a.target = '_blank'
+    a.textContent = "View PDF"
+    a.href = 'data:application/pdf;base64,' + base64PDF
 
-    return a;
+    return a
 }
-PDFTransform.mimetype = 'application/pdf';
+PDFTransform.mimetype = 'application/pdf'
