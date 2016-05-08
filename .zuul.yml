@@ -1,6 +1,0 @@
-ui: tape
-browsers:
-  - name: chrome
-    version: latest
-browserify:
-  - transform: babelify

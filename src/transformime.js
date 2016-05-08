@@ -3,6 +3,7 @@
 import { TextTransform } from './text.transform'
 import { ImageTransform } from './image.transform'
 import { HTMLTransform } from './html.transform'
+import { SVGTransform } from './svg.transform'
 /**
  * Transforms mimetypes into HTMLElements
  */
@@ -214,5 +215,7 @@ export {
     ImageTransform as ImageTransformer,
     HTMLTransform,
     HTMLTransform as HTMLTransformer,
+    SVGTransform,
+    SVGTransform as SVGTransform,
     createTransform
 };
