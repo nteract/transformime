@@ -57,7 +57,7 @@
     "watchify": "^3.7.0"
   },
   "dependencies": {
-    "ansi_up": "^1.3.0",
+    "anser": "^1.0.2",
     "commonmark": "^0.25.1",
     "mathjax-electron": "^0.2.0"
   }
