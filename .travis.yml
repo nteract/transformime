@@ -1,11 +1,17 @@
+sudo: required
+dist: trusty
+addons:
+  apt:
+    sources:
+      - google-chrome
+    packages:
+      - google-chrome-stable
 language: node_js
 node_js:
   - "4.2.2"
-sudo: false
 install:
   - npm install
   - npm run build
-addons:
-  sauce_connect:
-    username: 'nteract-tester'
-    access_key: 'b5ffd0eb-96e6-418d-9f15-3031cf8eb076'
+before_script:
+  - export DISPLAY=:99.0
+  - sh -e /etc/init.d/xvfb start
