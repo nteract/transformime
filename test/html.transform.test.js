@@ -24,7 +24,7 @@ tape('should execute script tag', function (t) {
   var htmlText = '<script>window.y=3;</script>'
   return tf.transform({'text/html': htmlText}, document).then(results => {
     document.body.appendChild(results.el)
-    t.equals(window.y, 3, 'this will fail on safari and firefox')
+    t.equals(window.y, 3, 'this will fail on safari')
     t.end()
   })
 })
