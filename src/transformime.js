@@ -22,7 +22,12 @@ class Transformime {
     this.transformers = []
     this.push(TextTransform)
     this.push(ImageTransform)
+    this.push(SVGTransform)
     this.push(HTMLTransform)
+    this.push(PDFTransform)
+    this.push(ScriptTransform)
+    this.push(MarkdownTransform)
+    this.push(LaTeXTransform)
     if (transformers) transformers.forEach((transformer) => { this.push(transformer) })
   }
   /**
