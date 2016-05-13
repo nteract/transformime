@@ -22,19 +22,8 @@ Transformime works in the browser (via browserify), converting a mimebundle (MIM
 
 ```javascript
 var transformime = require("transformime");
-var transformimeJupyter = require("transformime-jupyter-transformers");
 
-var transform = transformime.createTransform([
-    transformime.TextTransformer,
-    transformimeJupyter.PDFTransform,
-    transformime.ImageTransformer,
-    transformimeJupyter.SVGTransform,
-    transformimeJupyter.consoleTextTransform,
-    transformimeJupyter.LaTeXTransform,
-    transformimeJupyter.markdownTransform,
-    transformime.HTMLTransformer,
-    transformimeJupyter.ScriptTransform
-]);
+var transform = transformime.createTransform();
 
 transform({
     "text/plain": "Hello, World!",
