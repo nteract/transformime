@@ -11,7 +11,7 @@ var mathjaxHelper = require('mathjax-electron')
  * @param {string} value - The LateX data to be transformed.
  * @param {Document} document - A Document Object Model to be used for
  * creating an html div element.
- * @return {HTML Element} - An HTML div element containing the processed MathJax.
+ * @return {HTMLElement} - An HTML div element containing the processed MathJax.
  */
 export function LaTeXTransform(mimetype, value, document) {
     var container = document.createElement('div')
