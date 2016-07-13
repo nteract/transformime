@@ -2,6 +2,16 @@
 
 var Anser = require('anser')
 
+/**
+ * Converts console text or plaintext to an HTML pre element.
+ *
+ * @param {string, list} mimetype - The mimetype of the data to be transformed,
+ * it is unused by this function but included for a common API.
+ * @param {string} value - The text data to be transformed.
+ * @param {Document} document - A Document Object Model to be used for
+ * creating an html pre element.
+ * @return {HTML Element} - A pre element for the given text
+ */
 export function TextTransform(mimetype, value, document) {
   var el = document.createElement('pre')
   var esc = Anser.escapeForHtml(value)
