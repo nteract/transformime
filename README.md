@@ -106,6 +106,7 @@ text/html: <code>import this</code>
 > idoc.querySelector('body').innerHTML
 '<div><h1>mimetic</h1></div>'
 ```
+## [Full API Documentation](https://github.com/nteract/transformime/blob/master/Documentation.md)
 
 ## Development
 

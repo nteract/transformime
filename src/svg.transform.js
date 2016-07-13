@@ -8,7 +8,7 @@
  * @param {string} data - The svg data to be transformed.
  * @param {Document} document - A Document Object Model to be used for
  * creating an html div element.
- * @return {HTML Element} - An html div element containing the
+ * @return {HTMLElement} - An html div element containing the
  * transformed svg.
  * @throws {Error} - Throws an error if inner html does not have SVG as its
  * first tag name.

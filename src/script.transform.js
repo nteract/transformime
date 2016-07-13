@@ -9,7 +9,7 @@
  * @param {string} value - The script to be transformed.
  * @param {Document} document - A Document Object Model to be used for
  * creating an html img element.
- * @return {HTML Element} - A scriopt element for the given javascript
+ * @return {HTMLElement} - A scriopt element for the given javascript
  */
 
 export function ScriptTransform(mimetype, value, document) {
