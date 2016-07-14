@@ -15,7 +15,7 @@
     "build": "npm run build:es5 && npm run build:browser",
     "build:es5": "babel src --out-dir lib/ --source-maps",
     "build:browser": "browserify lib/*.js --outfile dist/transformime.js",
-    "build:docs": "jsdoc -R README.md -d doc -c config.json src/*.js",
+    "build:docs": "jsdoc -R README.md -d docs -c config.json src/*.js",
     "prepublish": "npm run build",
     "watch": "parallelshell 'npm run watch:test -s' 'npm run watch:build -s'",
     "watch:build": "nodemon -q -w src/ --ext '.' --exec 'npm run build'",
