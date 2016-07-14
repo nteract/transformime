@@ -9,7 +9,7 @@
   * @param {string} data - The html text to be transformed.
   * @param {Document} document - A Document Object Model to be used for
   * creating an html div element.
-  * @return {HTML Element} - A div element for the containing the transformed
+  * @return {HTMLElement} - A div element for the containing the transformed
   * html.
   */
 export function HTMLTransform (mimetype, data, document) {
