@@ -1,9 +1,7 @@
 #!/bin/bash
 if [[ $TRAVIS_PULL_REQUEST == false && $TRAVIS_BRANCH == "master" ]]
 then
-    echo "-- building docs --"
     npm run build:docs
-    echo "-- pushing docs --"
 
     ( cd docs
     git init
@@ -11,9 +9,10 @@ then
     git config user.name "Travis Bot"
 
     git add .
-    git commit -m "Deployed to GitHub Pages"
+    git commit -m "Publish docs from $TRAVIS_BUILD_NUMBER"
     git push --force --quiet "https://${GHTOKEN}@${GH_REF}" master:gh-pages > /dev/null 2>&1
+    echo "Documentation has been published!"
     )
 else
-    echo "-- will only push docs from master --"
+    echo "Documentation has not been published because not on master!"
 fi
