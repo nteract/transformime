@@ -107,6 +107,9 @@ text/html: <code>import this</code>
 '<div><h1>mimetic</h1></div>'
 ```
 
+## Documentation
+The full API documentation can be found [here](http://nteract.io/transformime/).
+
 ## Development
 
 ```
