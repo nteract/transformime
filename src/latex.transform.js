@@ -17,8 +17,7 @@ export function LaTeXTransform(mimetype, value, document) {
     var container = document.createElement('div')
     container.innerHTML = value
 
-    mathjaxHelper.loadMathJax(document)
-    mathjaxHelper.mathProcessor(container)
+    mathjaxHelper.loadAndTypeset(document, container)
     return container
 }
 LaTeXTransform.mimetype = 'text/latex'
