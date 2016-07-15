@@ -10,7 +10,7 @@ then
 
     git add .
     git commit -m "Publish docs from $TRAVIS_BUILD_NUMBER"
-    git push --force --quiet "https://${GHTOKEN}@${GH_REF}" master:gh-pages > /dev/null 2>&1
+    git push --force --quiet "https://${GH_TOKEN}@${GH_REF}" master:gh-pages > /dev/null 2>&1
     echo "Documentation has been published!"
     )
 else
