@@ -225,14 +225,9 @@ export {
     HTMLTransform,
     HTMLTransform as HTMLTransformer,
     SVGTransform,
-    SVGTransform as SVGTransform,
     PDFTransform,
-    PDFTransform as PDFTransform,
     ScriptTransform,
-    ScriptTransform as ScriptTransform,
     LaTeXTransform,
-    LaTeXTransform as LaTeXTransform,
     MarkdownTransform,
-    MarkdownTransform as MarkdownTransform,
     createTransform
 };
