@@ -219,11 +219,8 @@ function createTransform (transformers, doc) {
 export {
     Transformime,
     TextTransform,
-    TextTransform as TextTransformer,
     ImageTransform,
-    ImageTransform as ImageTransformer,
     HTMLTransform,
-    HTMLTransform as HTMLTransformer,
     SVGTransform,
     PDFTransform,
     ScriptTransform,
