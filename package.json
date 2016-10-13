@@ -64,6 +64,7 @@
   "dependencies": {
     "anser": "^1.1.0",
     "commonmark": "^0.26.0",
+    "escape-carriage": "^1.0.1",
     "mathjax-electron": "^1.1.0"
   }
 }
