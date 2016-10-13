@@ -1,6 +1,7 @@
 "use strict"
 
 var Anser = require('anser')
+var escapeCarriageReturn = require('escape-carriage')
 
 /**
  * Converts console text or plaintext to an HTML pre element.
@@ -15,6 +16,7 @@ var Anser = require('anser')
 export function TextTransform(mimetype, value, document) {
   var el = document.createElement('pre')
   var esc = Anser.escapeForHtml(value)
+  esc = escapeCarriageReturn(esc)
   el.innerHTML = Anser.ansiToHtml(esc)
   return el
 }
