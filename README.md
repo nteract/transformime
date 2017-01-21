@@ -1,8 +1,8 @@
 # transformime
 
+[![Build Status](https://travis-ci.org/nteract/transformime.svg)](https://travis-ci.org/nteract/transformime)
 [![Greenkeeper badge](https://badges.greenkeeper.io/nteract/transformime.svg)](https://greenkeeper.io/)
 
-[![Build Status](https://travis-ci.org/nteract/transformime.svg)](https://travis-ci.org/nteract/transformime)
 
 ![Optimus MIME](https://cloud.githubusercontent.com/assets/6437976/8895696/db154a04-3397-11e5-91ca-296b957658a6.png)
 
