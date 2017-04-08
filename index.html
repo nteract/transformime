@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Home</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Home</h1>
+
+    
+
+
+
+    
+
+
+    <h3> </h3>
+
+
+
+
+
+
+
+
+
+
+    
+
+
+
+
+    <section>
+        <article><h1>transformime</h1><p><a href="https://travis-ci.org/nteract/transformime"><img src="https://travis-ci.org/nteract/transformime.svg" alt="Build Status"></a>
+<a href="https://greenkeeper.io/"><img src="https://badges.greenkeeper.io/nteract/transformime.svg" alt="Greenkeeper badge"></a></p>
+<p><img src="https://cloud.githubusercontent.com/assets/6437976/8895696/db154a04-3397-11e5-91ca-296b957658a6.png" alt="Optimus MIME"></p>
+<p>Transforms MIMEtype+data to HTML Elements</p>
+<p>Intended to be used in context of Jupyter and IPython projects, particularly by display areas.</p>
+<h2>Installation</h2><pre class="prettyprint source"><code>npm install transformime</code></pre><h2>Usage</h2><p>Transformime works in the browser (via browserify), converting a mimebundle (MIME type + data) into HTML Elements. <code>transformime.transform</code> returns promises for all the HTMLElements.</p>
+<h3>Using the helper function <code>createTransform</code></h3><pre class="prettyprint source lang-javascript"><code>var transformime = require(&quot;transformime&quot;);
+
+var transform = transformime.createTransform();
+
+transform({
+    &quot;text/plain&quot;: &quot;Hello, World!&quot;,
+}).then(function onSuccess(result) {
+    mimeType = result.mimetype;
+    htmlElement = result.el;
+    console.log(&quot;Tranformime: Result:&quot;, mimeType, htmlElement);
+}, function onError(err) {
+    console.error(&quot;Transformime: Error:&quot;, err);
+});</code></pre><h3>Transform a single mimetype</h3><pre class="prettyprint source lang-javascript"><code>> t = new transformime.Transformime();
+> p1 = t.transform({'text/html': '&lt;h1>Woo&lt;/h1>'}, document)
+Promise { &lt;pending> }
+> p1
+Promise {
+  { mimetype: 'text/html',
+  el:
+   { _events: {},
+     _childNodes: [Object],
+     _childNodesList: null,
+     _ownerDocument: [Object],
+     _childrenList: null,
+     _version: 1,
+     _parentNode: null,
+     _memoizedQueries: {},
+     _readonly: false,
+     _namespaceURI: 'http://www.w3.org/1999/xhtml',
+     _prefix: null,
+     _localName: 'div',
+     _attributes: {},
+     _settingCssText: false,
+     _style: [Object] } } }
+> p1.then(function(result){
+...   console.log(result.el.innerHTML);
+...   console.log(result.el.textContent);
+... });
+Promise { &lt;pending> }
+> &lt;h1>Woo&lt;/h1>
+Woo</code></pre><p>Images get handled as base64 encoded data and become embedded elements.</p>
+<pre class="prettyprint source lang-javascript"><code>> // Send an image over
+> p2 = t.transform({'image/png': 'R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7'}, document)
+> p2.then(function(result){
+...     console.log(result.el.src);
+... })
+data:image/png;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7</code></pre><h3>Transform the richest element</h3><pre class="prettyprint source lang-javascript"><code>> var mimes = {'text/html': '&lt;code>import this&lt;/code>', 'text/plain': 'import this'}
+> var p3 = t.transform(mimes, document);
+> p3.then(function(result){
+...    console.log(result.mimetype + &quot;: &quot; + result.el.innerHTML)
+... })
+text/html: &lt;code>import this&lt;/code></code></pre><h3>Working with iframes</h3><pre class="prettyprint source lang-javascript"><code>> // Create an arbitrary iframe and slap it in the body of the document
+> var iframe = document.createElement(&quot;iframe&quot;);
+> document.querySelector('body').appendChild(iframe);
+> var idoc = iframe.contentDocument;
+> // Pass the iframe's document as the document context for the created element
+> var p5 = t.transform({'text/html': '&lt;h1>mimetic&lt;/h1>'}, idoc);
+> p5.then(function(result){
+... idoc.querySelector('body').appendChild(result.el);
+... })
+> idoc.querySelector('body').innerHTML
+'&lt;div>&lt;h1>mimetic&lt;/h1>&lt;/div>'</code></pre><h2>Documentation</h2><p>The full API documentation can be found <a href="http://nteract.io/transformime/">here</a>.</p>
+<h2>Development</h2><pre class="prettyprint source"><code>git clone https://github.com/nteract/transformime
+cd transformime
+npm install
+npm run build</code></pre></article>
+    </section>
+
+
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Transformime.html">Transformime</a></li></ul><h3>Global</h3><ul><li><a href="global.html#createTransform">createTransform</a></li><li><a href="global.html#HTMLTransform">HTMLTransform</a></li><li><a href="global.html#ImageTransform">ImageTransform</a></li><li><a href="global.html#LaTeXTransform">LaTeXTransform</a></li><li><a href="global.html#MarkdownTransform">MarkdownTransform</a></li><li><a href="global.html#PDFTransform">PDFTransform</a></li><li><a href="global.html#ScriptTransform">ScriptTransform</a></li><li><a href="global.html#SVGTransform">SVGTransform</a></li><li><a href="global.html#TextTransform">TextTransform</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a> on Sat Apr 08 2017 16:19:25 GMT+0000 (UTC)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
